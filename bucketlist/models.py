@@ -6,7 +6,7 @@ class User(db.Model):
     This class represents User table
     """
 
-    __tablename__ = 'Users'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), index=True)
     password = db.Column(db.String(100))
@@ -20,28 +20,28 @@ class Bucketlist(db.Model):
     This class reprewsents Bucketlist tables
     """
 
-    __tablename__ = 'Bucketlists'
+    __tablename__ = 'bucketlists'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), index=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    modified_at = db.Column(db.DateTime, default=datetime.utcnow)
-    owner = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     items = db.relationship('Item', backref='Bucketlist',
                             cascade='all, delete', lazy='dynamic')
     
     def __repr__(self):
         return '<BucketList %s>' % (self.name)
 
-class Items(db.Models):
+class Item(db.Model):
     """
     This class represents Items inthe buckelets table
     """
-    __tablename__ = 'Items'
+    __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), index=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    modified_at = db.Column(db.DateTime, default=datetime.utcnow)
+    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlists.id'))
 
     def __repr__(self):
-        return '<Items %s>' %(self.name)
+        return '<Item %s>' %(self.name)
