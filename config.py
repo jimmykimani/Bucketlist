@@ -9,7 +9,7 @@ class Config(object):
     SECRET = os.getenv('SECRET')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
-class DevelopmentConfig(config):
+class DevelopmentConfig(Config):
     """
     Configuration settings for development
     """
@@ -37,7 +37,7 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
 
-app_config = {
+config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'staging': StagingConfig,
