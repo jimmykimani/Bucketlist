@@ -1,2 +1,4 @@
 bc
 *.pyc
+.env
+.DS_Store
