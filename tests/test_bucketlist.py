@@ -15,20 +15,20 @@ class BucketlistTestCase(unittest.TestCase):
             db_create_all
         
     def test_create_a_bucketlist(self):
-        r = self.client().post('/v1/bucketlist/', data = self.bucketlist)
+        r = self.client().post('/v1/bucketlist/', data=self.bucketlist)
         self.assertEqual(r.status_code, 201)
 
     def test_get_all_bucketlists(self):
-        r = self.client().post('/v1/bucketlists/', data = self.bucketlist)
+        r = self.client().post('/v1/bucketlists/', data=self.bucketlist)
         self.assertEqual(r.status_code, 201)
         r = self.client().get('/v1/bucketlists/')
         self.assertEqual(r.status_code, 200)
         self.assertIn('Lets go to Lagos', str(r.data))
 
     def test_get_bucketlist_by_id(self):
-        r = self.client().post('/v1/bucketlist/1/', data = self.bucketlist)
+        r = self.client().post('/v1/bucketlist/1/', data=self.bucketlist)
         self.assertEqual(r.status_code, 201)
-        r =self.client().get('/v1/bucketlists/1')
+        r = self.client().get('/v1/bucketlists/1')
         self.assertEqual(r.status_code, 200)
         self.assertEqual(str(r.data), ['id'], 1)
 
@@ -38,5 +38,10 @@ class BucketlistTestCase(unittest.TestCase):
         self.assertEqual(str(r.data), ['error'])
 
     def test_update_bucketlist(self):
-        r = self.client().post('/v1/bucketlist/', data = self.bucketlist)
-        
+        """ Test API can update an existing bucketlist """
+        r = self.client().post('/v1/bucketlist/', data=self.bucketlist)
+        self.assertEqual(r.status_code, 201)
+        r =self.client().put('/v1/bucketlists/1',
+                data = {'name': 'Lets go to Lagos this weekend!'})
+        self.assertEqual(r.status_code, 200)
+    
