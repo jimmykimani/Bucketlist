@@ -22,7 +22,7 @@ class BucketlistTestCase(unittest.TestCase):
     
     def test_add_item_with_invalid_bucketlist_id(self):
         """ Test endpint rejects invalid bucketlist id """
-        testself.client().post('/api//v1/bucketlist/',
+        self.client().post('/api//v1/bucketlist/',
                                 data=json.dumps(self.bucketlist))
         r = self.client().post('/api/v1/bucketlist/2/items',
                                 data=json.dumps(self.items))
@@ -31,5 +31,5 @@ class BucketlistTestCase(unittest.TestCase):
 
     def test_update_items(self):
         """ Test endpoint updated items succesfully"""
-
+        
         
