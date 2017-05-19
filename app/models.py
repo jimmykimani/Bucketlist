@@ -1,19 +1,19 @@
 from app import db
 from datetime import datetime
 
-# class User(db.Model):
-#     """
-#     This class represents User table
-#     """
+class User(db.Model):
+    """
+    This class represents User table
+    """
 
-#     __tablename__ = 'users'
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(25), index=True)
-#     password = db.Column(db.String(100))
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(25), index=True)
+    password = db.Column(db.String(100))
 
 
-#     def __repr__(self):
-#         return '<User %r>' % self.username
+    def __repr__(self):
+        return '<User %r>' % self.username
 
 class Bucketlist(db.Model):
     """
