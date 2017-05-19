@@ -1,12 +1,14 @@
 import unittest
 import os
 import json
-from flask_testing import TestCase
 from app.models import Bucketlist, Item
 from app import create_app, db
 
-class TestBase(TestCase):
+class BaseTestCase(unittest.TestCase):
     """ Base config for running the tests """
+    def create_app(self):
+        return
+
     def setUp(self):
 
         self.app = create_app(config_name='testing')
@@ -17,9 +19,6 @@ class TestBase(TestCase):
 
         with self.app.app_context():
             db.create_all()
-
-    def create_app(self):
-        return
 
     def tearDown(self):
         """teardown all initialized variables."""

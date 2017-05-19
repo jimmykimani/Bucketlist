@@ -1,10 +1,10 @@
 import unittest
 import os
 import json
-from tests import TestBase
+from tests import BaseTestCase
 from app import create_app, db
 
-class BucketlistTestCase(TestBase):
+class BucketlistTestCase(BaseTestCase):
     """ Test endpoints for item bucketlist """
 
     def test_create_a_bucketlist_item(self):

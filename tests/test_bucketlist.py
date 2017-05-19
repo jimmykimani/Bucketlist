@@ -2,9 +2,9 @@ import unittest
 import os
 import json
 from app import create_app, db
-from tests import TestBase
+from tests import BaseTestCase
 
-class BucketlistTestCase(TestBase):
+class BucketlistTestCase(BaseTestCase):
     """ Test api can create bucketlists. """
 
     def test_create_a_bucketlist(self):
