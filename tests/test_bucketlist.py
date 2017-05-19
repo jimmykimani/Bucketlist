@@ -4,6 +4,7 @@ import json
 from app import create_app, db
 from tests import BaseTestCase
 
+
 class BucketlistTestCase(BaseTestCase):
     """ Test api can create bucketlists. """
 
@@ -42,7 +43,7 @@ class BucketlistTestCase(BaseTestCase):
         r = self.client().post('/api//v1/bucketlist/',
                                data=json.dumps(self.bucketlist))
         self.assertEqual(r.status_code, 201)
-        #update bucketlist
+        # update bucketlist
         new_bucketlist = {'name': 'Lets go to Lagos this weekend!'}
         r = self.client().put('/api/v1/bucketlists/1', data=new_bucketlist)
         self.assertEqual(r.status_code, 200)
@@ -52,7 +53,7 @@ class BucketlistTestCase(BaseTestCase):
     def test_update_an_inexistent_bucketlist(self):
         """ Test API can update an inexisting bucketlist. """
         r = self.client().put('/api//v1/bucketlists/1',
-                              data={'name':'Lets go to Lagos this weekend!'})
+                              data={'name': 'Lets go to Lagos this weekend!'})
         self.assertEqual(r.status_code, 404)
         self.assertEqual(json.loads(r.data), ['error'], 'Not Found')
 
@@ -70,9 +71,7 @@ class BucketlistTestCase(BaseTestCase):
         """ Test API can delete a non existing bucketlist."""
         r = self.client().post('/api//v1/bucketlist/',
                                data=self.bucketlist)
-        self.assertEqual(r.status_code, 201)        
+        self.assertEqual(r.status_code, 201)
         r = self.client().delete('/api/v1/bucketlists/9')
         self.assertEqual(r.status_code, 404)
         self.assertEqual(json.loads(r.data), ['error'], 'Not Found')
-    
-

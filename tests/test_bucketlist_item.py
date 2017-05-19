@@ -74,7 +74,7 @@ class BucketlistTestCase(BaseTestCase):
                                data=json.dumps(self.items))
         self.assertEqual(r.status_code, 201)
         #upadate new item
-        r = self.client().post('/api/v1/bucketlist/1/items/1',
+        r = self.client().put('/api/v1/bucketlist/1/items/1',
                                data=json.dumps(self.items_update))
         self.assertEqual(r.status_code, 200)
 
@@ -115,7 +115,7 @@ class BucketlistTestCase(BaseTestCase):
                            data=json.dumps(self.bucketlist))
         r = self.client().post('/api/v1/bucketlist/1/items',
                                data=json.dumps(self.items))
-        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.status_code, 204)
         # delete item
         r = self.client().delete('/api/v1/bucketlist/1/items/1',
                                  data=json.dumps(self.items))
@@ -130,7 +130,7 @@ class BucketlistTestCase(BaseTestCase):
                            data=json.dumps(self.bucketlist))
         r = self.client().post('/api/v1/bucketlist/1/items',
                                data=json.dumps(self.items))
-        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.status_code, 200)
         # delete item
         r = self.client().delete('/api/v1/bucketlist/1/items/999',
                                  data=json.dumps(self.items))

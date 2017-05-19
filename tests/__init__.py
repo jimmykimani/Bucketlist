@@ -4,8 +4,10 @@ import json
 from app.models import Bucketlist, Item
 from app import create_app, db
 
+
 class BaseTestCase(unittest.TestCase):
     """ Base config for running the tests """
+
     def create_app(self):
         return
 
@@ -14,8 +16,8 @@ class BaseTestCase(unittest.TestCase):
         self.app = create_app(config_name='testing')
         self.client = self.app.test_client
         self.bucketlist = {'name': 'Lets go to Lagos'}
-        self.items = {'name': 'item1', 'done':'False'}
-        self.items_update = {'name': 'item2', 'done':'False'}    
+        self.items = {'name': 'item1', 'done': 'False'}
+        self.items_update = {'name': 'item2', 'done': 'False'}
 
         with self.app.app_context():
             db.create_all()
@@ -27,6 +29,7 @@ class BaseTestCase(unittest.TestCase):
             # drop all tables
             db.session.remove()
             db.drop_all()
+
 
 if __name__ == "__main__":
     unittest.main()
