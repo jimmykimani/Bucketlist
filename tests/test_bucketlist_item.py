@@ -117,3 +117,48 @@ class BucketlistTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 404)
         self.assertEqual(json.loads(r.data), ['error'],
                          'Sorry invalid bucketlist id')
+
+    def test_delete_item(self):
+        """ Test deletion of items """
+        #create new item
+        self.client().post('/api//v1/bucketlist/',
+                           data=json.dumps(self.bucketlist))
+        r = self.client().post('/api/v1/bucketlist/1/items',
+                               data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 201)
+        # delete item
+        r = self.client().delete('/api/v1/bucketlist/1/items/1',
+                                 data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(json.loads(r.data), ['msg'],
+                         'Item deleted successfully')
+
+    def test_delete_with_invalid_item_id(self):
+        """ Test that endpoint rejects deletion with invalid bucketlist_id """
+        #create new item
+        self.client().post('/api//v1/bucketlist/',
+                           data=json.dumps(self.bucketlist))
+        r = self.client().post('/api/v1/bucketlist/1/items',
+                               data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 201)
+        # delete item
+        r = self.client().delete('/api/v1/bucketlist/1/items/999',
+                                 data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 404)
+        self.assertEqual(json.loads(r.data), ['error'],
+                         'Oops! Item not found')
+
+    def test_delete_with_invalid_bucketlist_id(self):
+        """ Test that endpoint rejects deletion with invalid bucketlist_id """
+        #create new item
+        self.client().post('/api//v1/bucketlist/',
+                           data=json.dumps(self.bucketlist))
+        r = self.client().post('/api/v1/bucketlist/404/items',
+                               data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 201)
+        # delete item
+        r = self.client().delete('/api/v1/bucketlist/1/items/1',
+                                 data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 404)
+        self.assertEqual(json.loads(r.data), ['error'],
+                         'Sorry invalid bucketlist id')
