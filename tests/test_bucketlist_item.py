@@ -59,7 +59,7 @@ class BucketlistTestCase(unittest.TestCase):
         r = self.client().get('/api/v1/bucketlist/1/items/1',
                               data=json.dumps(self.items))
         self.assertEqual(r.status_code, 200)
-        
+
     def test_get_all_items_with_invalid_id(self):
         """ Test endpoint rejects to fetch items with invalid id"""
         #create new item
@@ -74,4 +74,16 @@ class BucketlistTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 404)
         self.assertEqual(json.loads(r.data), ['error'],
                          'Item not found!')
-        
+                         
+    def test_update_items(self):
+        """ Test endpoint updated items succesfully"""
+        #create new item
+        self.client().post('/api//v1/bucketlist/',
+                           data=json.dumps(self.bucketlist))
+        r = self.client().post('/api/v1/bucketlist/1/items',
+                               data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 201)
+        #upadate new item
+        r = self.client().post('/api/v1/bucketlist/1/items/1',
+                               data=json.dumps(self.items_update))
+        self.assertEqual(r.status_code, 200)
