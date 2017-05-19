@@ -2,17 +2,10 @@ import unittest
 import os
 import json
 from app import create_app, db
+from tests import TestBase
 
-class BucketlistTestCase(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app(config_name = 'testing')
-        self.client = self.app.test_client
-        self.bucketlist = {'name': 'Lets go to Lagos'}
-        self.user = {'username':'jimmy', 'password':'pass'}
-
-        with self.app.app_context():
-            db.create_all()
-
+class BucketlistTestCase(TestBase):
+    """ Test api can create bucketlists. """
 
     def test_create_a_bucketlist(self):
         """ Tests API can create new bucketlist."""
@@ -83,13 +76,3 @@ class BucketlistTestCase(unittest.TestCase):
         self.assertEqual(json.loads(r.data), ['error'], 'Not Found')
     
 
-    def tearDown(self):
-        """teardown all initialized variables."""
-
-        with self.app.app_context():
-            # drop all tables
-            db.session.remove()
-            db.drop_all()
-
-if __name__ == "__main__":
-    unittest.main()

@@ -1,21 +1,11 @@
 import unittest
 import os
 import json
+from tests import TestBase
 from app import create_app, db
 
-class BucketlistTestCase(unittest.TestCase):
-    def setUp(self):
-        
-        self.app = create_app(config_name='testing')
-        self.client = self.app.test_client
-        self.bucketlist = {'name': 'Lets go to Lagos'}
-        self.items = {'name': 'item1', 'done':'False'}
-        self.items_update = {'name': 'item2', 'done':'False'}
-
-
-        with self.app.app_context():
-            db.create_all()
-
+class BucketlistTestCase(TestBase):
+    """ Test endpoints for item bucketlist """
 
     def test_create_a_bucketlist_item(self):
         """ Tests endpoint can create new item."""
