@@ -101,4 +101,19 @@ class BucketlistTestCase(unittest.TestCase):
                               data=json.dumps(self.items_update))
         self.assertEqual(r.status_code, 404)
         self.assertEqual(json.loads(r.data), ['error'],
-                         'Item not found!')        
+                         'Item not found!')
+                    
+    def test_update_with_invalid_bucketlist_id(self):
+        """ Test that endpoint rejects update with invalid bucketlist_id """
+        #create new item
+        self.client().post('/api//v1/bucketlist/',
+                           data=json.dumps(self.bucketlist))
+        r = self.client().post('/api/v1/bucketlist/1/items',
+                               data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 201)
+        #upadate new item
+        r = self.client().put('/api/v1/bucketlist/111/items/1',
+                              data=json.dumps(self.items_update))
+        self.assertEqual(r.status_code, 404)
+        self.assertEqual(json.loads(r.data), ['error'],
+                         'Sorry invalid bucketlist id')
