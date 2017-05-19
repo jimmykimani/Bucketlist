@@ -46,3 +46,16 @@ class BucketlistTestCase(unittest.TestCase):
         r = self.client().get('/api/v1/bucketlist/1/items',
                               data=json.dumps(self.items))
         self.assertEqual(r.status_code, 200)
+        
+    def test_get_all_items_by_id(self):
+        """ Test endpoint get items by id succesfully"""
+        #create new item
+        self.client().post('/api//v1/bucketlist/',
+                           data=json.dumps(self.bucketlist))
+        r = self.client().post('/api/v1/bucketlist/1/items',
+                               data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 201)
+        #get items by id
+        r = self.client().get('/api/v1/bucketlist/1/items/1',
+                              data=json.dumps(self.items))
+        self.assertEqual(r.status_code, 200)
