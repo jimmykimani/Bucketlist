@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, make_response, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_restful import reqparse, Resource, Api
+from flask_restful import reqparse, Resource, Api, inputs
 from app import db
 
 from app.models import User
@@ -19,88 +18,114 @@ class RegisterAPI(Resource):
 
     def __init__(self):
 
-        self.parser = reqparse.RequestParser()
-        self.parser.add_argument(
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
             'username', type=str,
-            help="No username provided!",
-            required=True
+            required=True,
+            help='Invalid Username!',
+            location='json'
         )
-        self.parser.add_argument(
+        self.reqparse.add_argument(
             'password', type=str,
-            help='Invalid password'
+            required=True,
+            help='Please provid a password',
+            location='json'
         )
+        
 
     def post(self):
-        args = self.parser.parse_args()
-        if username is None or password is None:
-            abort(400)
+        """ lets one register to the API """
+
+        args = self.reqparse.parse_args()
         user = User.query.filter_by(username=args['username']).first()
-        if user is None:
+        if not user:
             try:
-                user = Users(
+                user = User(
                     username=args['username'],
-                    password=args['password'],
+                    password_hash=args['password']
                 )
+
+                # insert the user
                 user.hash_password(args['password'])
                 db.session.add(user)
                 db.session.commit()
 
-                auth_token = user.generate_auth_token()
-                r = {
+                # generate the auth token
+                # auth_token = user.generate_auth_token()
+                response = {
                     'status': 'success',
                     'message': 'Successfully registered.',
-                    'auth_token': auth_token.decode()
+                    # 'auth_token': auth_token.decode()
                 }
-                return make_response(jsonify(r)), 201
+
+                return (response, 201)
             except Exception as e:
-                r = {
-                    'status': 'fail',
+                response = {
+                    'status': 'fail' + str(e),
                     'message': 'Some error occurred. Please try again.'
                 }
-                return make_response(jsonify(r)), 401
+                return (response, 500)
         else:
-            r = {
+            response = {
                 'status': 'fail',
                 'message': 'User already exists. Please Log in.',
             }
-            return make_response(jsonify(r)), 202
+            return (response, 202)
 
 
 class LoginAPI(Resource):
-    """
-    User Login Resource
-    """
+    """Login Resource"""
+
+    def __init__(self):
+        """
+        constructor for  LoginAPI
+        """
+
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            'username', type=str,
+            required=True,
+            help='Invalid Username!',
+            location='json'
+        )
+        self.reqparse.add_argument(
+            'password', type=str,
+            required=True,
+            help='Please provid a password',
+            location='json'
+        )
 
     def post(self):
-        # fetch the post data
-        args = self.parser.parse_args()
+        """"
+         fxn to allow Login into the API
+        """
+
+        args = self.reqparse.parse_args()
+        user = User.query.filter_by(username=args['username']).first()
         try:
-            # fetch the user data
-            user = User.query.filter_by(username=args['username']).first()
-            if user and user.verify_password(args['password']):
-                auth_token = user.generate_auth_token(user.id)
-                if auth_token:
+            if user:
+                # verifies user and password
+                if user.verify_password(args['password']):
+                    auth_token = user.generate_auth_token()
                     response = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
-                        'auth_token': auth_token.decode()
+                        # 'auth_token': auth_token.decode()
                     }
-                    return make_response(jsonify(response)), 200
-            else:
-                response = {
-                    'status': 'fail',
-                    'message': 'User does not exist.'
-                }
-                return make_response(jsonify(response)), 404
-        except Exception as e:
-            print(e)
+                    return response, 200
+                else:
+                    response = {
+                        'status': 'fail',
+                        'message': 'Invalid user or Password mismatch.'
+                    }
+                    return response, 404
+        except:
+
             response = {
                 'status': 'fail',
                 'message': 'Try again'
             }
-
-            return make_response(jsonify(response)), 500
-
+            return response, 500
 
 api_auth.add_resource(RegisterAPI, '/auth/register', endpoint='register')
 api_auth.add_resource(LoginAPI, '/auth/login', endpoint='login')

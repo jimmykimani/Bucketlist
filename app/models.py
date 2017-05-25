@@ -3,44 +3,36 @@ from app import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
+from passlib.apps import custom_app_context as pwd_context
 
 
 class User(db.Model):
-    """
-    This class represents User table
-    """
-
     __tablename__ = 'users'
-    user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(25), index=True)
-    password = db.Column(db.String(100))
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32), index=True)
+    password_hash = db.Column(db.String(250), nullable=False)
+    bucketlist = db.relationship('Bucketlist', backref='users')
 
-    @property
-    def password(self):
-        raise AttributeError('password is not a readable attribute')
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
 
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
 
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def get_token(self, expiration=36000):
-
+    def generate_auth_token(self, expiration=600):
         s = Serializer(os.getenv('SECRET_KEY'), expires_in=expiration)
-        return s.dumps({'user_id': self.user_id})
+        return s.dumps({'id': self.id})
 
     @staticmethod
     def verify_auth_token(token):
-        serializer = Serializer(os.getenv('SECRET'))
+        s = Serializer(os.getenv('SECRET'))
         try:
-            data = serializer.loads(token)
+            data = s.loads(token)
         except SignatureExpired:
-            return None
+            return None    # valid token, but expired
         except BadSignature:
-            return None
-        user = User.query.get(data['user_id'])
+            return None    # invalid token
+        user = User.query.get(data['id'])
         return user
 
     def __repr__(self):
@@ -57,7 +49,7 @@ class Bucketlist(db.Model):
     name = db.Column(db.String(255), index=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
-    created_by = db.Column(db.Integer, db.ForeignKey('users.user_id'),
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'),
                            nullable=False)
     items = db.relationship('Item', backref='Bucketlist',
                             cascade='all, delete', lazy='dynamic')
@@ -75,7 +67,8 @@ class Item(db.Model):
     name = db.Column(db.String(255), index=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
-    bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlists.id'))
+    bucketlist_id = db.Column(
+        db.Integer, db.ForeignKey('bucketlists.bucketlist_id'))
 
     def __repr__(self):
         return '<Item %s>' % (self.name)
