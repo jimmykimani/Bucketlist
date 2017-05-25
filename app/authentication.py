@@ -66,7 +66,40 @@ class RegisterAPI(Resource):
             return make_response(jsonify(r)), 202
 
 
+class LoginAPI(Resource):
+    """
+    User Login Resource
+    """
 
+    def post(self):
+        # fetch the post data
+        args = self.parser.parse_args()
+        try:
+            # fetch the user data
+            user = User.query.filter_by(username=args['username']).first()
+            if user and user.verify_password(args['password']):
+                auth_token = user.generate_auth_token(user.id)
+                if auth_token:
+                    response = {
+                        'status': 'success',
+                        'message': 'Successfully logged in.',
+                        'auth_token': auth_token.decode()
+                    }
+                    return make_response(jsonify(response)), 200
+            else:
+                response = {
+                    'status': 'fail',
+                    'message': 'User does not exist.'
+                }
+                return make_response(jsonify(response)), 404
+        except Exception as e:
+            print(e)
+            response = {
+                'status': 'fail',
+                'message': 'Try again'
+            }
+
+            return make_response(jsonify(response)), 500
 
 
 api_auth.add_resource(RegisterAPI, '/auth/register', endpoint='register')
