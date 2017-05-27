@@ -96,9 +96,7 @@ class LoginAPI(Resource):
         )
 
     def post(self):
-        """"
-         fxn to allow Login into the API
-        """
+
 
         args = self.reqparse.parse_args()
         user = User.query.filter_by(username=args['username']).first()
@@ -110,7 +108,7 @@ class LoginAPI(Resource):
                     response = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
-                        # 'auth_token': auth_token.decode()
+                        'auth_token': auth_token.decode()
                     }
                     return response, 200
                 else:
@@ -119,8 +117,12 @@ class LoginAPI(Resource):
                         'message': 'Invalid user or Password mismatch.'
                     }
                     return response, 404
+            elif not user or not password:
+                response={
+                    'message':'Invalid user or Password mismatch'
+                }
+                return response, 404
         except:
-
             response = {
                 'status': 'fail',
                 'message': 'Try again'
@@ -129,3 +131,5 @@ class LoginAPI(Resource):
 
 api_auth.add_resource(RegisterAPI, '/auth/register', endpoint='register')
 api_auth.add_resource(LoginAPI, '/auth/login', endpoint='login')
+
+
