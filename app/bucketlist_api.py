@@ -42,3 +42,6 @@ bucketlist_field = {'id': fields.Integer,
                     'created_by': fields.String,
                     'uri': fields.Url('bucket_list.bucketlist'),
                     }
+
+bucketlist_blueprint = Blueprint('bucket_list', __name__)
+api_bucketlist = Api(bucketlist_blueprint)
