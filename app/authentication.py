@@ -107,7 +107,7 @@ class LoginAPI(Resource):
                     auth_token = user.generate_auth_token()
                     response = {
                         'status': 'success',
-                        'message': "Whoot! Whoot! You're in ",
+                        'message': "Whoot! Whoot! You're in",
                         'auth_token': auth_token.decode()
                     }
                     return response, 200

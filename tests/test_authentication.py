@@ -1,20 +1,101 @@
 import unittest
 import os
 import json
-from tests import BaseTestCase, register_user
+from base import BaseTestCase
+from app.models import User
 
 url = '/api/v1/auth/'
-data = {
-    "username":"jimmykimani",
-    "password":"pass1234"
-}
+
 
 class UserTestCase(BaseTestCase):
     """ Test endpoints for users """
 
     def test_registration(self):
         """ Test for user registration """
-        response = self.client.pots(url + 'register', data=data)
-        data = json.loads(response.data)
+        response = self.client.post(
+            '/api/v1/auth/register',
+            data=json.dumps(dict(
+                username='joe',
+                password='123456'
+            )),
+            content_type='application/json'
+        )
+        data = json.loads(response.data.decode())
+        self.assertTrue(data['status'] == 'success')
         self.assertTrue(data['message'] == 'Successfully registered.')
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertEqual(response.status_code, 201)
 
+    def test_registered_with_already_registered_user(self):
+        """ Test registration with already registered email"""
+        self.client.post(
+            '/api/v1/auth/register',
+            data=json.dumps(dict(
+                username='joe',
+                password='123456'
+            )),
+            content_type='application/json'
+        )        
+        response = self.client.post(
+            '/api/v1/auth/register',
+            data=json.dumps(dict(
+                username='joe',
+                password='123456'
+            )),
+            content_type='application/json'
+        )
+        data = json.loads(response.data.decode())
+        self.assertTrue(data['status'] == 'fail')
+        self.assertTrue(
+            data['message'] == 'User already exists. Please Log in.')
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertEqual(response.status_code, 202)
+
+    def test_user_login(self):
+        """ Test user login """
+        self.client.post(
+            '/api/v1/auth/register',
+            data=json.dumps(dict(
+                username='joe',
+                password='123456'
+            )),
+            content_type='application/json'
+        )  
+        response = self.client.post(
+            '/api/v1/auth/login',
+            data=json.dumps(dict(
+                username='joe',
+                password='123456'
+            )),
+            content_type='application/json'
+        )
+        data = json.loads(response.data.decode())
+        self.assertTrue(data['status'] == 'success')
+        self.assertTrue(data['message'] == "Whoot! Whoot! You're in")
+        self.assertTrue(data['auth_token'])
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_login_with_invalid_password(self):
+        """ Test user login """
+        self.client.post(
+            '/api/v1/auth/register',
+            data=json.dumps(dict(
+                username='joe',
+                password='123456'
+            )),
+            content_type='application/json'
+        )  
+        response = self.client.post(
+            '/api/v1/auth/login',
+            data=json.dumps(dict(
+                username='joe',
+                password='1234567890'
+            )),
+            content_type='application/json'
+        )
+        data = json.loads(response.data.decode())
+        self.assertTrue(data['status'] == 'fail')
+        self.assertTrue(data['message'] == "Invalid user or Password mismatch.")
+        self.assertTrue(response.content_type == 'application/json')
+        self.assertEqual(response.status_code, 404)
