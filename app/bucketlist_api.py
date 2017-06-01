@@ -1,6 +1,6 @@
 from flask_restful import Api, Resource, fields, marshal, reqparse
 from flask_httpauth import HTTPTokenAuth
-from flask import Flask, request, g
+from flask import Flask, request, g, jsonify
 from datetime import datetime
 from flask import g, Blueprint
 
@@ -38,9 +38,9 @@ bucketlist_field = {'id': fields.Integer,
                     'name': fields.String,
                     'date_created': fields.DateTime,
                     'date_modified': fields.DateTime,
-                    'items': fields.Nested(bucketlist_item_field),
+                    # 'items': fields.Nested(bucketlist_item_field),
                     'created_by': fields.String,
-                    'uri': fields.Url('bucket_list.bucketlist'),
+                    'uri': fields.Url('bucket_list.bucketlists'),
                     }
 
 bucketlist_blueprint = Blueprint('bucket_list', __name__)
@@ -73,24 +73,16 @@ class BucketlistAPI(Resource):
 
     def post(self):
         args = self.reqparse.parse_args()
+        new_bucketlist = Bucketlist(name=args['name'], created_by=g.user.id)
 
         if Bucketlist.query.filter_by(name=args['name'], created_by=g.user.id).first():
             return errors.Conflict('Bucket list {} already exists'.format(args['name']))
+        if new_bucketlist:
+            
+            db.session.add(new_bucketlist)
+            db.session.commit()
 
-        bucketlist = Bucketlist(name=args['name'], created_by=g.user.id)
-
-        db.session.add(bucketlist)
-        db.session.commit()
-
-        return (
-            {
-                'message': 'New bucketlist created successfully',
-                'bucketlist': marshal(
-                    bucketlist,
-                    bucketlist_field
-                )
-            }, 201
-        )
+            return marshal(new_bucketlist, bucketlist_field), 201
 
 # define the API resource
 api_bucketlist.add_resource(
