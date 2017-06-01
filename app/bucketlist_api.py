@@ -180,6 +180,31 @@ class BucketlistItemAPI(Resource):
             return errors.Conflict('Item already exists')
         if not args['item_name']:
             return errors.bad_request('Please provide an item name')
+
+    def put(self, bucketlist_id, item_id):
+        """
+        Updates a specific bucketlist item
+        """
+        args = self.reqparse.parse_args()
+        bucketlist = Bucketlist.query.filter_by(
+            id=bucketlist_id, created_by=g.user.id).first()
+        bucketlist_item = Item.query.filter_by(item_id=item_id).first()
+        name = args['item_name']
+        done = args['done']
+
+        if not bucketlist:
+            return errors.not_found('Invalid bucketlist id')
+        if not bucketlist_item:
+            return errors.not_found('Invalid item id')
+
+        elif bucketlist_item:
+            if done in ['True', 'False']:
+                bucketlist_item.done = done
+            if name:
+                bucketlist_item.name = name
+
+            db.session.commit()
+            return marshal(bucketlist_item, bucketlist_item_field), 200
 # define the API resource
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
