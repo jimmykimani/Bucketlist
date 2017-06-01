@@ -25,8 +25,8 @@ class BucketlistTestCase(BaseTestCase):
         """ Tests API can't create an existing bucketlist."""
         bucketlist = {'name': 'Lets go to Lagos'}
         self.client.post('/api/v1/bucketlists/',
-                                    headers=self.set_header(),
-                                    data=json.dumps(bucketlist))
+                         headers=self.set_header(),
+                         data=json.dumps(bucketlist))
         response = self.client.post('/api/v1/bucketlists/',
                                     headers=self.set_header(),
                                     data=json.dumps(bucketlist))
@@ -47,7 +47,7 @@ class BucketlistTestCase(BaseTestCase):
         self.client.post(url,
                          data=json.dumps(dict(name='new bucketlist')),
                          headers=self.set_header())
-        response = self.client.get(url +'1/', headers=self.set_header())
+        response = self.client.get(url + '1/', headers=self.set_header())
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['name'], 'new bucketlist')
@@ -57,7 +57,7 @@ class BucketlistTestCase(BaseTestCase):
         self.client.post(url,
                          data=json.dumps(dict(name='new bucketlist')),
                          headers=self.set_header())
-        response = self.client.get(url +'2/', headers=self.set_header())
+        response = self.client.get(url + '2/', headers=self.set_header())
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
 
@@ -67,8 +67,33 @@ class BucketlistTestCase(BaseTestCase):
                          data=json.dumps(dict(name='new bucketlist')),
                          headers=self.set_header())
         # update bucketlist
-        response = self.client.put(url +'1/',
-                         data=json.dumps(dict(name='update new bucketlist')),
-                         headers=self.set_header())
+        response = self.client.put(url + '1/',
+                                   data=json.dumps(
+                                       dict(name='update new bucketlist')),
+                                   headers=self.set_header())
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
+
+    def test_delete_bucketlist(self):
+        """Test API can delete an existing bucketlist."""
+        self.client.post(url,
+                         data=json.dumps(dict(name='new bucketlist')),
+                         headers=self.set_header())
+        # delete bucketlist
+        response = self.client.delete(url + '1/',
+                                      headers=self.set_header())
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data['message'] ==
+                        'bucketlist with id 1 has been deleted')
+
+    def test_deleting_non_existing_bucketlist(self):
+        """ Test API can delete a non existing bucketlist."""
+        self.client.post(url,
+                         data=json.dumps(dict(name='new bucketlist')),
+                         headers=self.set_header())
+        # delete bucketlist
+        response = self.client.delete(url + '10/',
+                                      headers=self.set_header())
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)
