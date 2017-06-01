@@ -14,11 +14,11 @@ class User(db.Model):
     Once a login is sucesfull the user is generatd
     an auth token 
     """
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), index=True)
     password_hash = db.Column(db.String(250), nullable=False)
-    bucketlist = db.relationship('Bucketlist', backref='users')
+    bucketlist = db.relationship('Bucketlist', backref='user')
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -26,7 +26,7 @@ class User(db.Model):
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
 
-    def generate_auth_token(self, expiration=600):
+    def generate_auth_token(self, expiration=36000):
         """
         To verify the auth_token, we use the same 
         SECRET KEY used to encode a token
@@ -59,18 +59,18 @@ class Bucketlist(db.Model):
     This class reprewsents Bucketlist tables
     """
 
-    __tablename__ = 'bucketlists'
+    __tablename__ = 'bucketlist'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), index=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
-    created_by = db.Column(db.Integer, db.ForeignKey('users.id'),
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'),
                            nullable=False)
     items = db.relationship('Item', backref='bucketlist',
                             cascade='all, delete', lazy='dynamic')
 
-    def __repr__(self):
-        return '<BucketList %s>' % (self.name)
+    # def __repr__(self):
+    #     return '<BucketList %s>' % (self.name)
 
 
 class Item(db.Model):
@@ -83,7 +83,7 @@ class Item(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     bucketlist_id = db.Column(
-        db.Integer, db.ForeignKey('bucketlists.id'))
+        db.Integer, db.ForeignKey('bucketlist.id'))
 
     def __repr__(self):
         return '<Item %s>' % (self.name)
