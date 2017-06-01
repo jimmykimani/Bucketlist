@@ -12,12 +12,14 @@ class BucketlistTestCase(BaseTestCase):
 
     def test_create_a_bucketlist(self):
         """ Tests API can create new bucketlist."""
-        r = self.client.post('/api/v1/bucketlist/',
+        bucketlist = {'name': 'Lets go to Lagos'}
+        r = self.client.post('/api/v1/bucketlists/',
                                data=json.dumps(bucketlist), headers=self.headers)
         self.assertEqual(r.status_code, 201)
 
     def test_get_all_bucketlists(self):
         """ Test API can get all buecketlists """
+        bucketlist = {'name': 'Lets go to Lagos'}
         r = self.client.post('/api/v1/bucketlists/',
                                data=json.dumps(bucketlist), headers=self.headers)
         self.assertEqual(r.status_code, 201)
