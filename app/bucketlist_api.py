@@ -74,7 +74,7 @@ class BucketlistAPI(Resource):
         else:
             self.reqparse = reqparse.RequestParser()
             self.reqparse.add_argument(
-                'page', type=int,location='args',
+                'page', type=int, location='args',
                 deafult=1
             )
             self.reqparse.add_argument(
@@ -84,10 +84,39 @@ class BucketlistAPI(Resource):
                 location='args'
             )
             self.reqparse.add_argument(
-                'q',type=str,
+                'q', type=str,
                 location='args'
             )
+            args = self.reqparse.parse_args()
+            q = args['q']
+            page = args['page']
+            limit = args['20']
+        # if search or query parameters are given
+        if q:
+            bucketlist = Bucketlist.query.filter(Bucketlist.created_by == g.user.id,
+                                                 Bucketlist.name.like('%' + q + '%'))\
+                .paginate(page, limit, False)
+        else:
+            bucketlist = Bucketlist.query.filter_by(created_by=g.user.id).\
+                                                paginate(page, limit, False)
+        if not bucketlist:
+            return errors.not_found('Bucketlist not available')
 
+        if bucketlist.has_next:
+            next_page = request.url + '?page=' + str(page + 1)+ '&limit=' + str(limit)
+        else:
+            next_page = 'Null'
+        if bucketlist.has_prev:
+            prev_page = request.url + '?page=' + str(page - 1) + '&limit=' + str(limit)
+        else:
+            prev_page = 'Null'
+        return {'meta':{'next_page':next_page,
+                        'prev_page':prev_page,
+                        'total_pages':bucketlist.pages
+                        },
+                        'bucketlist':marshal(bucketlist.items,
+                        bucketlist_field
+                        )}, 200
     def post(self):
         args = self.reqparse.parse_args()
         new_bucketlist = Bucketlist(name=args['name'],
