@@ -45,3 +45,49 @@ bucketlist_field = {'id': fields.Integer,
 
 bucketlist_blueprint = Blueprint('bucket_list', __name__)
 api_bucketlist = Api(bucketlist_blueprint)
+
+class BucketlistAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        """
+        Define the bucketlist parameters
+
+        """
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            'name', type=str,
+            required=True,
+            help='Please provide a bucketlist name',
+            location='json'
+        )
+
+    def get(self, id=None):
+        if id:
+            if g.user.id:
+                bucket = Bucketlist.query.filter_by(
+                    id=id, created_by=g.user.id).first()
+                print ('passs............')
+                if bucket:
+                    return marshal(bucket, bucketlist_field), 200
+
+    def post(self):
+        args = self.reqparse.parse_args()
+
+        if Bucketlist.query.filter_by(name=args['name'], created_by=g.user.id).first():
+            return errors.Conflict('Bucket list {} already exists'.format(args['name']))
+
+        bucketlist = Bucketlist(name=args['name'], created_by=g.user.id)
+
+        db.session.add(bucketlist)
+        db.session.commit()
+
+        return (
+            {
+                'message': 'New bucketlist created successfully',
+                'bucketlist': marshal(
+                    bucketlist,
+                    bucketlist_field
+                )
+            }, 201
+        )
