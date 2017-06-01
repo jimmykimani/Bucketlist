@@ -99,25 +99,28 @@ class BucketlistAPI(Resource):
                 .paginate(page, limit, False)
         else:
             bucketlist = Bucketlist.query.filter_by(created_by=g.user.id).\
-                                                paginate(page, limit, False)
+                paginate(page, limit, False)
         if not bucketlist:
             return errors.not_found('Bucketlist not available')
 
         if bucketlist.has_next:
-            next_page = request.url + '?page=' + str(page + 1)+ '&limit=' + str(limit)
+            next_page = request.url + '?page=' + \
+                str(page + 1) + '&limit=' + str(limit)
         else:
             next_page = 'Null'
         if bucketlist.has_prev:
-            prev_page = request.url + '?page=' + str(page - 1) + '&limit=' + str(limit)
+            prev_page = request.url + '?page=' + \
+                str(page - 1) + '&limit=' + str(limit)
         else:
             prev_page = 'Null'
-        return {'meta':{'next_page':next_page,
-                        'prev_page':prev_page,
-                        'total_pages':bucketlist.pages
-                        },
-                        'bucketlist':marshal(bucketlist.items,
-                        bucketlist_field
-                        )}, 200
+        return {'meta': {'next_page': next_page,
+                         'prev_page': prev_page,
+                         'total_pages': bucketlist.pages
+                         },
+                'bucketlist': marshal(bucketlist.items,
+                                      bucketlist_field
+                                      )}, 200
+
     def post(self):
         args = self.reqparse.parse_args()
         new_bucketlist = Bucketlist(name=args['name'],
@@ -201,17 +204,16 @@ class BucketlistItemAPI(Resource):
     def get(self, bucketlist_id=None, item_id=None):
         if item_id:
             user_id = g.user.id
-            get_item = Item.query.filter_by(id=bucketlist_id, item_id=item_id).first()
-            return marshal(get_item,bucketlist_item_field), 200
+            get_item = Item.query.filter_by(
+                id=bucketlist_id, item_id=item_id).first()
+            return marshal(get_item, bucketlist_item_field), 200
         if bucketlist_id:
             return marshal(get_item, bucketlist_item_field), 200
         else:
             item = Item.query.filter().all()
             if not items:
                 return errors.not_found('No items created')
-            return marshal(item,bucketlist_item_field), 200
-
-    
+            return marshal(item, bucketlist_item_field), 200
 
     def post(self, bucketlist_id):
         """
@@ -289,16 +291,17 @@ class BucketlistItemAPI(Resource):
         """
         bucketlist = Bucketlist.query.filter_by(
             id=bucketlist_id, created_by=g.user.id).first()
-        bucketlist_item = Item.query.filter_by(item_id=item_id).first()
+        bucketlist_item = Item.query.filter_by(bucketlist_id=bucketlist_id,
+                                               item_id=item_id).first()
 
         if not bucketlist or bucketlist_item:
             return errors.not_found('Invalid bucketlist id')
         if bucketlist.created_by != g.user.id:
             return errors.forbidden('Your not authorized to perfome deletion')
-
-        db.session.delete(bucketlist_item)
-        db.session.commit()
-        return ({'message': 'bucketlist with id {} has been deleted'.format(item_id)}, 200)
+        if bucketlist_item:
+            db.session.delete(bucketlist_item)
+            db.session.commit()
+            return ({'message': 'bucketlist with id {} has been deleted'.format(item_id)}, 200)
 
 
 # define the API resource
