@@ -255,7 +255,7 @@ class BucketlistItemAPI(Resource):
             return errors.unauthorized('Your not authorised to access this item!')
         if Item.query.filter_by(name=args['item_name']).first():
             return errors.Conflict('Item already exists')
-        if not args['item_name']:
+        if not args['name']:
             return errors.bad_request('Please provide an item name')
 
     def put(self, bucketlist_id, item_id):
@@ -266,7 +266,7 @@ class BucketlistItemAPI(Resource):
         bucketlist = Bucketlist.query.filter_by(
             id=bucketlist_id, created_by=g.user.id).first()
         bucketlist_item = Item.query.filter_by(item_id=item_id).first()
-        name = args['item_name']
+        name = args['name']
         done = args['done']
 
         if not bucketlist:
