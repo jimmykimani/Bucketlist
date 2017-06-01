@@ -1,8 +1,8 @@
-import unittest
+
 import os
+
 import json
-from app import create_app, db
-from base import BaseTestCase
+from tests.base import BaseTestCase
 
 
 bucketlist = {'name': 'Lets go to Lagos'}
@@ -13,9 +13,12 @@ class BucketlistTestCase(BaseTestCase):
     def test_create_a_bucketlist(self):
         """ Tests API can create new bucketlist."""
         bucketlist = {'name': 'Lets go to Lagos'}
-        r = self.client.post('/api/v1/bucketlists/',
-                               data=json.dumps(bucketlist), headers=self.headers)
-        self.assertEqual(r.status_code, 201)
+        response = self.client.post('/api/v1/bucketlists/',\
+                                    headers=self.headers,\
+                                    data=json.dumps(bucketlist)) 
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 201)
+
 
     def test_get_all_bucketlists(self):
         """ Test API can get all buecketlists """
@@ -63,13 +66,13 @@ class BucketlistTestCase(BaseTestCase):
 
     def test_delete_bucketlist(self):
         """Test API can delete an existing bucketlist."""
-        r = self.client.post('/api/v1/bucketlist/',
+        r = self.client.post('/api/v1/bucketlists/',
                                data=json.dumps(bucketlist), headers=self.headers)
         self.assertEqual(r.status_code, 201)
-        r = self.client.delete('/api/v1/bucketlists/1')
+        r = self.client.delete('/api/v1/bucketlists/1/')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(json.loads(r.data), ['msg'],
-                         'Bucketlist deleted succesfully')
+        self.assertEqual(json.loads(r.data), ['message'],
+                         'bucketlist with id 1 has been deleted')
 
     def test_deleting_non_existing_bucketlist(self):
         """ Test API can delete a non existing bucketlist."""

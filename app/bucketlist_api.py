@@ -129,6 +129,26 @@ class BucketlistAPI(Resource):
                 return errors.bad_request(' Unauthorised')
         else:
             return errors.not_found('Bucketlist does not exist!')
+
+class BucketlistItemAPI(Resource):
+    decorators = [auth.login_required]
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument(
+            'name', type=str,
+            required=True,
+            help='Please provide an item name',
+            location='json'
+        )
+        self.reqparse.add_argument(
+            'done', default=False,
+            type=bool,
+            location='json'
+        )
+
+    def get(self, bucketlist_id):
+        pass
 # define the API resource
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
