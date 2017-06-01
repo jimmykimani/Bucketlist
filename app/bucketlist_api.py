@@ -25,6 +25,7 @@ def verify_token(token):
 # Flask-RESTful provides the fields module and the marshal to help us solve this
 # while working with objects
 
+
 bucketlist_item_field = {'item_id': fields.Integer,
                          'item_name': fields.String,
                          'date_created': fields.DateTime,
@@ -45,6 +46,7 @@ bucketlist_field = {'id': fields.Integer,
 
 bucketlist_blueprint = Blueprint('bucket_list', __name__)
 api_bucketlist = Api(bucketlist_blueprint)
+
 
 class BucketlistAPI(Resource):
     decorators = [auth.login_required]
@@ -78,12 +80,55 @@ class BucketlistAPI(Resource):
         if Bucketlist.query.filter_by(name=args['name'], created_by=g.user.id).first():
             return errors.Conflict('Bucket list {} already exists'.format(args['name']))
         if new_bucketlist:
-            
+
             db.session.add(new_bucketlist)
             db.session.commit()
 
             return marshal(new_bucketlist, bucketlist_field), 201
 
+    def put(self, id):
+        args = self.reqparse.parse_args()
+        bucketlist = Bucketlist.query.filter_by(
+            id=id, created_by=g.user.id).first()
+        name = args['name']
+
+        if not bucketlist:
+            return ({'message': 'bucketlist with id {} has been updated'.format(id)}, 200)
+        if name:
+            if bucketlist.created_by == g.user.id:
+
+                bucketlist.name = name
+                db.session.add(bucketlist)
+                db.session.commit()
+                return (
+                    {
+                        'message': 'Update was successfull',
+                        'bucketlist': marshal(
+                            bucketlist,
+                            bucketlist_field
+                        )
+                    }, 200
+                )
+
+            else:
+                return errors.bad_request(' Unauthorised')
+        else:
+            return errors.bad_request('No value provided!')
+
+    def delete(self, id):
+    
+        bucketlist = Bucketlist.query.filter_by(
+            id=id, created_by=g.user.id).first()
+
+        if bucketlist:
+            if bucketlist.created_by == g.user.id:
+                db.session.delete(bucketlist)
+                db.session.commit()
+                return ({'message': 'bucketlist with id {} has been deleted'.format(id)}, 200)
+            else:
+                return errors.bad_request(' Unauthorised')
+        else:
+            return errors.not_found('Bucketlist does not exist!')
 # define the API resource
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
