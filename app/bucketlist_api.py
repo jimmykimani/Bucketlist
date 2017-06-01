@@ -71,7 +71,22 @@ class BucketlistAPI(Resource):
                 id=id, created_by=g.user.id).first()
             if bucket:
                 return marshal(bucket, bucketlist_field), 200
-
+        else:
+            self.reqparse = reqparse.RequestParser()
+            self.reqparse.add_argument(
+                'page', type=int,location='args',
+                deafult=1
+            )
+            self.reqparse.add_argument(
+                'limit',
+                type=int,
+                default=20,
+                location='args'
+            )
+            self.reqparse.add_argument(
+                'q',type=str,
+                location='args'
+            )
 
     def post(self):
         args = self.reqparse.parse_args()
