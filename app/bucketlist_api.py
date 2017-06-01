@@ -27,7 +27,8 @@ def verify_token(token):
 
 
 bucketlist_item_field = {'item_id': fields.Integer,
-                         'item_name': fields.String,
+                         'name': fields.String,
+                         'bucketlist_id': fields.Integer,
                          'date_created': fields.DateTime,
                          'date_modified': fields.DateTime(dt_format='rfc822'),
                          'done': fields.String
@@ -39,7 +40,7 @@ bucketlist_field = {'id': fields.Integer,
                     'name': fields.String,
                     'date_created': fields.DateTime,
                     'date_modified': fields.DateTime,
-                    # 'items': fields.Nested(bucketlist_item_field),
+                    'items': fields.Nested(bucketlist_item_field),
                     'created_by': fields.String,
                     'uri': fields.Url('bucket_list.bucketlists'),
                     }
@@ -66,19 +67,21 @@ class BucketlistAPI(Resource):
 
     def get(self, id=None):
         if id:
-            if g.user.id:
-                bucket = Bucketlist.query.filter_by(
-                    id=id, created_by=g.user.id).first()
-                print ('passs............')
-                if bucket:
-                    return marshal(bucket, bucketlist_field), 200
+            bucket = Bucketlist.query.filter_by(
+                id=id, created_by=g.user.id).first()
+            if bucket:
+                return marshal(bucket, bucketlist_field), 200
+
 
     def post(self):
         args = self.reqparse.parse_args()
-        new_bucketlist = Bucketlist(name=args['name'], created_by=g.user.id)
+        new_bucketlist = Bucketlist(name=args['name'],
+                                    created_by=g.user.id)
 
-        if Bucketlist.query.filter_by(name=args['name'], created_by=g.user.id).first():
-            return errors.Conflict('Bucket list {} already exists'.format(args['name']))
+        if Bucketlist.query.filter_by(name=args['name'],
+                                      created_by=g.user.id).first():
+            return errors.Conflict('Bucket list {} already exists'
+                                   .format(args['name']))
         if new_bucketlist:
 
             db.session.add(new_bucketlist)
@@ -93,7 +96,8 @@ class BucketlistAPI(Resource):
         name = args['name']
 
         if not bucketlist:
-            return ({'message': 'bucketlist with id {} has been updated'.format(id)}, 200)
+            return ({'message': 'bucketlist with id {} has been updated'
+                     .format(id)}, 200)
         if name:
             if bucketlist.created_by == g.user.id:
 
@@ -116,7 +120,7 @@ class BucketlistAPI(Resource):
             return errors.bad_request('No value provided!')
 
     def delete(self, id):
-    
+
         bucketlist = Bucketlist.query.filter_by(
             id=id, created_by=g.user.id).first()
 
@@ -124,11 +128,13 @@ class BucketlistAPI(Resource):
             if bucketlist.created_by == g.user.id:
                 db.session.delete(bucketlist)
                 db.session.commit()
-                return ({'message': 'bucketlist with id {} has been deleted'.format(id)}, 200)
+                return ({'message': 'bucketlist with id {} has been deleted'
+                         .format(id)}, 200)
             else:
                 return errors.bad_request(' Unauthorised')
         else:
             return errors.not_found('Bucketlist does not exist!')
+
 
 class BucketlistItemAPI(Resource):
     decorators = [auth.login_required]
@@ -156,13 +162,27 @@ class BucketlistItemAPI(Resource):
         """
 
         args = self.reqparse.parse_args()
+        name = args['name']
         bucketlist = Bucketlist.query.filter_by(
             id=bucketlist_id, created_by=g.user.id).first()
 
         if not bucketlist:
             return errors.not_found('Sorry couldnt find bucketlist that matches id {}'.format(bucketlist_id))
+
+        existent_item = (Item.query.filter_by(
+            bucketlist_id=bucketlist_id, name=name)).first()
+        if existent_item:
+            return errors.Conflict('item already exists')
+        last_existent_item = (Item.query.filter_by(bucketlist_id=bucketlist_id)
+                              .order_by(db.desc(Item.id)))
+        try:
+            prev_item_id = last_existent_item[0].id
+        except IndexError:
+            prev_item_id = 0
+
         if bucketlist.created_by == g.user.id:
-            new_item = Item(name=args['item_name'],
+            new_item = Item(name=name,
+                            item_id=prev_item_id + 1,
                             bucketlist_id=bucketlist_id)
             db.session.add(new_item)
             db.session.commit()
@@ -222,13 +242,13 @@ class BucketlistItemAPI(Resource):
         db.session.delete(bucketlist_item)
         db.session.commit()
         return ({'message': 'bucketlist with id {} has been deleted'.format(item_id)}, 200)
+
+
 # define the API resource
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
 api_bucketlist.add_resource(
     BucketlistItemAPI,
-    '/bucketlists/items/',
-    '/bucketlists/<int:bucketlist_id>/items/',
-    '/bucketlists/<int:bucketlist_id>/items/<int:item_id>', endpoint='items'
-
+    '/api/v1/bucketlists/<int:bucketlist_id>/items/',
+    '/api/v1/bucketlists/<int:bucketlist_id>/items/<int:item_id>', endpoint='items'
 )
