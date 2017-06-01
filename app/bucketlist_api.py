@@ -91,6 +91,7 @@ class BucketlistAPI(Resource):
                 )
             }, 201
         )
-# define the API resourc
+
+# define the API resource
 api_bucketlist.add_resource(
-    BucketlistAPI, '/bucketlists/<int:id>/', '/bucketlists/', endpoint='bucketlists')
+    BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
