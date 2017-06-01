@@ -149,6 +149,37 @@ class BucketlistItemAPI(Resource):
 
     def get(self, bucketlist_id):
         pass
+
+    def post(self, bucketlist_id):
+        """
+        Creates items to a specific bucketlist
+        """
+
+        args = self.reqparse.parse_args()
+        bucketlist = Bucketlist.query.filter_by(
+            id=bucketlist_id, created_by=g.user.id).first()
+
+        if not bucketlist:
+            return errors.not_found('Sorry couldnt find bucketlist that matches id {}'.format(bucketlist_id))
+        if bucketlist.created_by == g.user.id:
+            new_item = Item(name=args['item_name'],
+                            bucketlist_id=bucketlist_id)
+            db.session.add(new_item)
+            db.session.commit()
+            return (
+                {
+                    'message': 'New bucketlist item created successfully',
+                    'bucketlist': marshal(
+                        new_item,
+                        bucketlist_item_field)
+                }, 201
+            )
+        else:
+            return errors.unauthorized('Your not authorised to access this item!')
+        if Item.query.filter_by(name=args['item_name']).first():
+            return errors.Conflict('Item already exists')
+        if not args['item_name']:
+            return errors.bad_request('Please provide an item name')
 # define the API resource
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
