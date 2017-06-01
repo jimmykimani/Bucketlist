@@ -5,37 +5,14 @@ from app.models import User, Bucketlist, Item
 from app import create_app, db
 
 
-def register_user(self, username, password):
-    
-    return self.client.post(
-        '/auth/register',
-        data=json.dumps(dict(
-            username=username,
-            password=password
-        )),
-        content_type='application/json',
-    )
-
-def login_user(self, username, password):
-    return self.client.post(
-        'api/v1/auth/login',
-        data=json.dumps(dict(
-            username=username,
-            password=password
-        )),
-        content_type='application/json',
-    )
-
 class BaseTestCase(unittest.TestCase):
     """ Base config for running the tests """
 
     def setUp(self):
 
         self.app = create_app(config_name='testing')
+
         self.client = self.app.test_client
-        self.bucketlist = {'name': 'Lets go to Lagos'}
-        self.items = {'name': 'item1', 'done': 'False'}
-        self.items_update = {'name': 'item2', 'done': 'False'}
 
         with self.app.app_context():
             db.create_all()

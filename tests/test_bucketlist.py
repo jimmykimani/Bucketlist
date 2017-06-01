@@ -5,6 +5,8 @@ from app import create_app, db
 from tests import BaseTestCase
 
 
+self.bucketlist = {'name': 'Lets go to Lagos'}
+
 class BucketlistTestCase(BaseTestCase):
     """ Test api can create bucketlists. """
 

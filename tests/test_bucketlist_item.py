@@ -4,6 +4,9 @@ import json
 from tests import BaseTestCase
 from app import create_app, db
 
+self.items = {'name': 'item1', 'done': 'False'}
+
+self.items_update = {'name': 'item2', 'done': 'False'}
 
 class BucketlistTestCase(BaseTestCase):
     """ Test endpoints for item bucketlist """

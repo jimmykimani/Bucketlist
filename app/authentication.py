@@ -129,7 +129,7 @@ class LoginAPI(Resource):
             }
             return response, 500
 
-api_auth.add_resource(RegisterAPI, '/auth/register', endpoint='register')
-api_auth.add_resource(LoginAPI, '/auth/login', endpoint='login')
+api_auth.add_resource(RegisterAPI, '/api/v1/auth/register', endpoint='register')
+api_auth.add_resource(LoginAPI, '/api/v1/auth/login', endpoint='login')
 
 
