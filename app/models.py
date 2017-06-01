@@ -80,10 +80,11 @@ class Item(db.Model):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), index=True)
+    bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlist.id',ondelete='CASCADE' ))
+    item_id = db.Column(db.Integer)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
-    bucketlist_id = db.Column(
-        db.Integer, db.ForeignKey('bucketlist.id'))
+    done = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Item %s>' % (self.name)

@@ -71,11 +71,12 @@ class BucketlistAPI(Resource):
                 id=id, created_by=g.user.id).first()
             if bucket:
                 return marshal(bucket, bucketlist_field), 200
+            return errors.not_found('Bucketlist not found')
         else:
             self.reqparse = reqparse.RequestParser()
             self.reqparse.add_argument(
                 'page', type=int, location='args',
-                deafult=1
+                default=1
             )
             self.reqparse.add_argument(
                 'limit',
@@ -90,7 +91,7 @@ class BucketlistAPI(Resource):
             args = self.reqparse.parse_args()
             q = args['q']
             page = args['page']
-            limit = args['20']
+            limit = args['limit']
         # if search or query parameters are given
         if q:
             bucketlist = Bucketlist.query.filter(Bucketlist.created_by == g.user.id,
@@ -197,8 +198,20 @@ class BucketlistItemAPI(Resource):
             location='json'
         )
 
-    def get(self, bucketlist_id):
-        pass
+    def get(self, bucketlist_id=None, item_id=None):
+        if item_id:
+            user_id = g.user.id
+            get_item = Item.query.filter_by(id=bucketlist_id, item_id=item_id).first()
+            return marshal(get_item,bucketlist_item_field), 200
+        if bucketlist_id:
+            return marshal(get_item, bucketlist_item_field), 200
+        else:
+            item = Item.query.filter().all()
+            if not items:
+                return errors.not_found('No items created')
+            return marshal(item,bucketlist_item_field), 200
+
+    
 
     def post(self, bucketlist_id):
         """
@@ -218,9 +231,9 @@ class BucketlistItemAPI(Resource):
         if existent_item:
             return errors.Conflict('item already exists')
         last_existent_item = (Item.query.filter_by(bucketlist_id=bucketlist_id)
-                              .order_by(db.desc(Item.id)))
+                              .order_by(db.desc(Item.item_id)))
         try:
-            prev_item_id = last_existent_item[0].id
+            prev_item_id = last_existent_item[0].item_id
         except IndexError:
             prev_item_id = 0
 
