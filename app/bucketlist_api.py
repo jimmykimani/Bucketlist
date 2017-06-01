@@ -205,6 +205,23 @@ class BucketlistItemAPI(Resource):
 
             db.session.commit()
             return marshal(bucketlist_item, bucketlist_item_field), 200
+
+    def delete(self, bucketlist_id, item_id):
+        """
+        Delete an item in a Bucketlist
+        """
+        bucketlist = Bucketlist.query.filter_by(
+            id=bucketlist_id, created_by=g.user.id).first()
+        bucketlist_item = Item.query.filter_by(item_id=item_id).first()
+
+        if not bucketlist or bucketlist_item:
+            return errors.not_found('Invalid bucketlist id')
+        if bucketlist.created_by != g.user.id:
+            return errors.forbidden('Your not authorized to perfome deletion')
+
+        db.session.delete(bucketlist_item)
+        db.session.commit()
+        return ({'message': 'bucketlist with id {} has been deleted'.format(item_id)}, 200)
 # define the API resource
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
