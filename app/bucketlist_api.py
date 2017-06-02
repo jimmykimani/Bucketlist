@@ -10,11 +10,17 @@ from app.models import User, Bucketlist, Item
 from app import errors
 
 auth = HTTPTokenAuth(scheme='Token')
+# Use HTTP authentication scheme to protect route '/' with a token
+# The scheme name(Token) is given as an argument in the constructor.
 
 
 @auth.verify_token
 def verify_token(token):
-    """To validate the token sent by the user."""
+    """
+    The verify_token callback receives the
+    authentication credentials provided by
+    the client on the Authorization header
+    """
     user = User.verify_auth_token(token)
     if not user:
         return False
@@ -25,7 +31,7 @@ def verify_token(token):
 # Flask-RESTful provides the fields module and the marshal to help us solve this
 # while working with objects
 
-
+# Field Marshal for Bucketlist item
 bucketlist_item_field = {'item_id': fields.Integer,
                          'name': fields.String,
                          'bucketlist_id': fields.Integer,
@@ -54,13 +60,23 @@ api_bucketlist = Api(bucketlist_blueprint)
 
 
 class BucketlistAPI(Resource):
+    """
+    This class retrieves all the bucket lists 
+    that a user has created
+
+    The class uses reqparse to validate data
+    where it creates an instance of it
+
+    """
     decorators = [auth.login_required]
+    # This callback function will be called when authentication is succesful
 
     def __init__(self):
         """
         Define the bucketlist parameters
 
         """
+        # Use reqparse for request data validation
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
             'name', type=str,
@@ -70,6 +86,18 @@ class BucketlistAPI(Resource):
         )
 
     def get(self, id=None):
+        """
+        The [GET] is used to return all bucktlists
+        or a spcefic bucteklist if search parameters
+        are provided
+
+        Args:
+            id :the bucketlist identifier
+            q : returns specfic bucketlist based on the name
+            limit:specify the number of results
+        Returns:
+            BucketList query
+        """   
         if id:
             bucket = Bucketlist.query.filter_by(
                 id=id, created_by=g.user.id).first()
@@ -97,6 +125,10 @@ class BucketlistAPI(Resource):
             page = args['page']
             limit = args['limit']
         # if search or query parameters are given
+
+        # Paginates the result of passed in functions and returns as JSON(Marshal)
+        # courtesy - Miguel Grinberg (blog.miguelgrinberg.com)
+
         if q:
             bucketlist = Bucketlist.query.filter(Bucketlist.created_by == g.user.id,
                                                  Bucketlist.name.like('%' + q + '%'))\
@@ -126,6 +158,8 @@ class BucketlistAPI(Resource):
                                       )}, 200
 
     def post(self):
+        """
+        Creates a bucketlist and saves it to the database """
         args = self.reqparse.parse_args()
         new_bucketlist = Bucketlist(name=args['name'],
                                     created_by=g.user.id)
@@ -142,6 +176,14 @@ class BucketlistAPI(Resource):
             return marshal(new_bucketlist, bucketlist_field), 201
 
     def put(self, id):
+        """
+        Edit the name of a bucketlist [PUT]
+
+        Args:
+            id :the bucketlist identiier
+        Returns:
+            a dictionary of the bucketlist
+        """      
         args = self.reqparse.parse_args()
         bucketlist = Bucketlist.query.filter_by(
             id=id, created_by=g.user.id).first()
@@ -172,7 +214,14 @@ class BucketlistAPI(Resource):
             return errors.bad_request('No value provided!')
 
     def delete(self, id):
+        """
+        Delete a single bucketlist [DELETE]
 
+        Args:
+            id :the bucketlist identifier
+        Returns:
+            Response of the result status
+        """
         bucketlist = Bucketlist.query.filter_by(
             id=id, created_by=g.user.id).first()
 
@@ -210,6 +259,15 @@ class BucketlistItemAPI(Resource):
         )
 
     def get(self, bucketlist_id=None, item_id=None):
+        """
+        Returns a bucketlist item
+
+        Args:
+            bucketlist_id -- the bucketlist identifier
+            item_id :the bucketlist item identifier
+        Returns:
+            BucketList item query
+        """     
         if item_id:
             user_id = g.user.id
             get_item = Item.query.filter_by(
@@ -271,7 +329,12 @@ class BucketlistItemAPI(Resource):
 
     def put(self, bucketlist_id, item_id):
         """
-        Updates a specific bucketlist item
+        Edit the name of a bucketlist itrem
+
+        Args:
+            id :the bucketlist item  identiier
+        Returns:
+            a dictionary of the bucketlist  item updated
         """
         args = self.reqparse.parse_args()
         bucketlist = Bucketlist.query.filter_by(
