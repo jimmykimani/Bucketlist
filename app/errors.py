@@ -5,7 +5,9 @@ class ValidationError(ValueError):
     """Custom Exception"""
     pass
 
-
+    # ======================================================
+    # CUSTOM EXECPTIONS
+    # ------------------------------------------------------ 
 def forbidden(message):
     response = jsonify({'status': 403, 'error': 'forbidden',
                         'message': message})
@@ -38,3 +40,7 @@ def Conflict(message):
                         'message': message})
     response.status_code = 409
     return response
+
+    # ======================================================
+    # EOF 
+    # ------------------------------------------------------ 

@@ -9,6 +9,9 @@ from app.models import Bucketlist, Item
 url = '/api/v1/bucketlists/'
 item_url = '/api/v1/bucketlists/1/items/'
 
+# ======================================================
+# Tests Buckelist Resource functionality.
+# ---------------------------------------------------------
 
 class BucketlistTestCase(BaseTestCase):
     """ Test api can create bucketlists. """
@@ -105,6 +108,11 @@ class BucketlistTestCase(BaseTestCase):
                                       headers=self.set_header())
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
+        
+
+    # ======================================================
+    # Tests Buckelist Item Resource functionality.
+    # -------------------------------------------------------
 
     def test_create_a_bucketlist_item(self):
         """ Tests endpoint can create new item."""
@@ -178,3 +186,8 @@ class BucketlistTestCase(BaseTestCase):
     #                                headers=self.set_header())
     #     data = json.loads(response.data.decode())
     #     self.assertEqual(response.status_code, 404)
+
+
+    # ======================================================
+    # EOF 
+    # ------------------------------------------------------ 

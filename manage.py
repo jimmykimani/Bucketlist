@@ -14,16 +14,15 @@ COV = coverage.coverage(
 )
 COV.start()
 
-from flask_script import Manager, prompt_bool
+from flask_script import Manager, prompt_bool, Shell
 from flask_migrate import Migrate, MigrateCommand
 from app import db, create_app
 from app.models import User, Bucketlist, Item
 
+# create the app
 app = create_app(config_name=os.getenv('APP_SETTINGS'))
 migrate = Migrate(app, db)
 manager = Manager(app)
-
-manager.add_command('db', MigrateCommand)
 
 
 @manager.command
@@ -54,14 +53,14 @@ def cov():
         return 0
     return 1
 
-
+# manually create_db
 @manager.command
 def create_db():
     """Creates database tables from models"""
     db.create_all()
     print ('Intialized....!')
 
-
+# manually drop db
 @manager.command
 def drop_db():
     """Drops database tables"""
@@ -69,6 +68,18 @@ def drop_db():
         db.drop_all()
         print ('Db droped....!')
 
+
+def make_shell_context():
+    return dict(User=User,
+                Bucketlist=Bucketlist,
+                Item=Item)
+
+# Allows us to make migrations using the db command
+# Allows use to access shell as above.
+
+
+manager.add_command("shell", Shell(make_context=make_shell_context))
+manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     manager.run()

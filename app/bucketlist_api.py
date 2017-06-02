@@ -48,6 +48,10 @@ bucketlist_field = {'id': fields.Integer,
 bucketlist_blueprint = Blueprint('bucket_list', __name__)
 api_bucketlist = Api(bucketlist_blueprint)
 
+# ======================================================
+# CREATE Bucketlist Resource
+# ------------------------------------------------------
+
 
 class BucketlistAPI(Resource):
     decorators = [auth.login_required]
@@ -187,6 +191,10 @@ class BucketlistAPI(Resource):
 class BucketlistItemAPI(Resource):
     decorators = [auth.login_required]
 
+    # ======================================================
+    # CREATE Bucketlist Item Resource
+    # ------------------------------------------------------
+
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
@@ -226,7 +234,8 @@ class BucketlistItemAPI(Resource):
             id=bucketlist_id, created_by=g.user.id).first()
 
         if not bucketlist:
-            return errors.not_found('Sorry couldnt find bucketlist that matches id {}'.format(bucketlist_id))
+            return errors.not_found('Sorry couldnt find bucketlist that matches id {}'\
+                                    .format(bucketlist_id))
 
         existent_item = (Item.query.filter_by(
             bucketlist_id=bucketlist_id, name=name)).first()
@@ -303,8 +312,9 @@ class BucketlistItemAPI(Resource):
             db.session.commit()
             return ({'message': 'bucketlist with id {} has been deleted'.format(item_id)}, 200)
 
+# =================================================
+# DEFINE API RESOURCE FOR BUCKETLIST AND ITEMS
 
-# define the API resource
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')
 api_bucketlist.add_resource(
@@ -312,3 +322,6 @@ api_bucketlist.add_resource(
     '/api/v1/bucketlists/<int:bucketlist_id>/items/',
     '/api/v1/bucketlists/<int:bucketlist_id>/items/<int:item_id>', endpoint='items'
 )
+# =================================================
+# EOF
+# --------------------------------------------------

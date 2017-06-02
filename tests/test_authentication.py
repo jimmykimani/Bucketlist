@@ -8,6 +8,10 @@ from app.models import User
 class UserTestCase(BaseTestCase):
     """ Test endpoints for users """
 
+    # ======================================================
+    # Tests User Login and Register Resource functionality.
+    # ---------------------------------------------------------
+
     def test_registration(self):
         """ Test for user registration """
         response = self.client.post(
@@ -112,3 +116,7 @@ class UserTestCase(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertTrue(response.content_type == 'application/json')
         self.assertEqual(response.status_code, 404)
+
+    # ======================================================
+    # EOF 
+    # ------------------------------------------------------ 
