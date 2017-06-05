@@ -1,2 +1,2 @@
 # Bucketlist
-![](http://i.imgur.com/M6uGEmW.gif)
+![](http://imgur.com/M6uGEmW.gif)
