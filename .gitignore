@@ -92,3 +92,4 @@ ENV/
 u.py
 base.py
 auth.py
+.DS_Store
