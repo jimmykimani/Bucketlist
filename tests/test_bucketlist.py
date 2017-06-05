@@ -11,7 +11,7 @@ item_url = '/api/v1/bucketlists/1/items/'
 
 # ======================================================
 # Tests Buckelist Resource functionality.
-# ---------------------------------------------------------
+# --------------------------------------------------------
 
 class BucketlistTestCase(BaseTestCase):
     """ Test api can create bucketlists. """

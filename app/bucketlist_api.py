@@ -182,7 +182,7 @@ class BucketlistAPI(Resource):
         Args:
             id :the bucketlist identiier
         Returns:
-            a dictionary of the bucketlist
+            a dictionary of the bucketlist updated
         """      
         args = self.reqparse.parse_args()
         bucketlist = Bucketlist.query.filter_by(
