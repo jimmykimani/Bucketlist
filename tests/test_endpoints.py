@@ -173,18 +173,18 @@ class BucketlistTestCase(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
 
-    # def test_delete_with_invalid_item_id(self):
-    #     """ Test that endpoint rejects deletion with invalid bucketlist_id """
-    #     # create new item
-    #     self.client.post(url,
-    #                      data=json.dumps(dict(name='new bucketlist')),
-    #                      headers=self.set_header())
-    #     self.client.post(item_url, data=json.dumps(dict(name='new item')),
-    #                                 headers=self.set_header())
-    #     response = self.client.delete(item_url+ '999',
-    #                                headers=self.set_header())
-    #     data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 404)
+    def test_delete_with_invalid_item_id(self):
+        """ Test that endpoint rejects deletion with invalid bucketlist_id """
+        # create new item
+        self.client.post(url,
+                         data=json.dumps(dict(name='new bucketlist')),
+                         headers=self.set_header())
+        self.client.post(item_url, data=json.dumps(dict(name='new item')),
+                                    headers=self.set_header())
+        response = self.client.delete(item_url+ '999',
+                                   headers=self.set_header())
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)
 
     # ======================================================
     # EOF

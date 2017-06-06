@@ -29,7 +29,7 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_registered_with_already_registered_user(self):
-        """ Test registration with already registered email"""
+        """ Test registration with already registered username"""
         self.client.post(
             '/api/v1/auth/register',
             data=json.dumps(dict(

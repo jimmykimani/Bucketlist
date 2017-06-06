@@ -1,6 +1,6 @@
-from flask import Blueprint
-from flask_restful import reqparse, Resource, Api
-
+from flask import Flask, Blueprint, make_response, jsonify
+from flask_restful import reqparse, Resource, Api, inputs		 
+from app import db
 from app.models import User
 
 
@@ -43,7 +43,7 @@ class RegisterAPI(Resource):
                     password_hash=args['password']
                 )
 
-                # insert the user and hash password
+                # generate the auth token
                 user.hash_password(args['password'])
                 db.session.add(user)
                 db.session.commit()
@@ -113,7 +113,7 @@ class LoginAPI(Resource):
                     }
                     return response, 404
             elif not user or not password:
-                response = {
+                response={
                     'message': 'Invalid user or Password mismatch'
                 }
                 return response, 404
@@ -128,8 +128,8 @@ class LoginAPI(Resource):
 # --------------------------------------------------
 
 
-api_auth.add_resource(
-    RegisterAPI, '/api/v1/auth/register', endpoint='register')
+api_auth.add_resource(RegisterAPI, '/api/v1/auth/register', endpoint='register')
+
 api_auth.add_resource(LoginAPI, '/api/v1/auth/login', endpoint='login')
 
 

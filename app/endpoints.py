@@ -36,7 +36,7 @@ bucketlist_item_field = {'item_id': fields.Integer,
                          'name': fields.String,
                          'bucketlist_id': fields.Integer,
                          'date_created': fields.DateTime,
-                         'date_modified': fields.DateTime(dt_format='rfc822'),
+                         'date_modified': fields.DateTime,
                          'done': fields.String
                          }
 
@@ -46,8 +46,8 @@ bucketlist_field = {'id': fields.Integer,
                     'name': fields.String,
                     'date_created': fields.DateTime,
                     'date_modified': fields.DateTime,
-                    'items': fields.Nested(bucketlist_item_field),
                     'created_by': fields.String,
+                    'items': fields.Nested(bucketlist_item_field),
                     'uri': fields.Url('bucket_list.bucketlists'),
                     }
 
@@ -173,7 +173,11 @@ class BucketlistAPI(Resource):
             db.session.add(new_bucketlist)
             db.session.commit()
 
-            return marshal(new_bucketlist, bucketlist_field), 201
+        return ({'message': 'New bucketlist created successfully',
+                 'bucketlist': marshal(
+                     new_bucketlist,
+                     bucketlist_field
+                 )}, 201)
 
     def put(self, id):
         """
@@ -190,28 +194,30 @@ class BucketlistAPI(Resource):
         name = args['name']
 
         if not bucketlist:
-            return ({'message': 'bucketlist with id {} has been updated'
-                        .format(id)}, 200)
-        if name:
-            if bucketlist.created_by == g.user.id:
-
-                bucketlist.name = name
-                db.session.add(bucketlist)
-                db.session.commit()
-                return (
-                    {
-                        'message': 'Update was successfull',
-                        'bucketlist': marshal(
-                            bucketlist,
-                            bucketlist_field
-                        )
-                    }, 200
-                )
-
-            else:
-                return errors.bad_request(' Unauthorised')
+            return ({'message': 'bucketlist does not exist.'}, 404)
         else:
-            return errors.bad_request('No value provided!')
+            if name == bucketlist.name:
+                return ({'message': 'Cannot update with same name.'}, 409)
+            if name:
+                if bucketlist.created_by == g.user.id:
+
+                    bucketlist.name = name
+                    db.session.add(bucketlist)
+                    db.session.commit()
+                    return (
+                        {
+                            'message': 'Update was successfull',
+                            'bucketlist': marshal(
+                                bucketlist,
+                                bucketlist_field
+                            )
+                        }, 200
+                    )
+
+                else:
+                    return errors.bad_request(' Unauthorised')
+            else:
+                return errors.bad_request('No value provided!')
 
     def delete(self, id):
         """
@@ -357,6 +363,8 @@ class BucketlistItemAPI(Resource):
         elif bucketlist_item:
             if done in [True, False]:
                 bucketlist_item.done = done
+            if name == bucketlist_item.name:
+                return ({'message': 'Cannot update with same name.'}, 409)
             if name:
                 bucketlist_item.name = name
 
@@ -369,16 +377,19 @@ class BucketlistItemAPI(Resource):
         """
         bucketlist = Bucketlist.query.filter_by(
             id=bucketlist_id, created_by=g.user.id).first()
-        bucketlist_item = Item.query.filter_by(item_id=item_id).first()
+        bucketlist_item = Item.query.filter_by(
+            bucketlist_id=bucketlist_id, item_id=item_id).first()
 
-        if not bucketlist or bucketlist_item:
+        if not bucketlist:
+            return errors.not_found('Invalid bucketlist id')
+        if not bucketlist_item:
             return errors.not_found('Invalid bucketlist id')
         if bucketlist.created_by != g.user.id:
             return errors.forbidden('Your not authorized to perfome deletion')
-        if bucketlist_item:
-            db.session.delete(bucketlist_item)
-            db.session.commit()
-            return ({'message': 'bucketlist with id {} has been deleted'.format(item_id)}, 200)
+
+        db.session.delete(bucketlist_item)
+        db.session.commit()
+        return ({'message': 'bucketlist with id {} has been deleted'.format(item_id)}, 200)
 
 # =================================================
 # DEFINE API RESOURCE FOR BUCKETLIST AND ITEMS

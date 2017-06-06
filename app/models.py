@@ -59,7 +59,7 @@ class Bucketlist(db.Model):
 
     __tablename__ = 'bucketlist'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), index=True)
+    name = db.Column(db.String(255), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'),
@@ -67,8 +67,8 @@ class Bucketlist(db.Model):
     items = db.relationship('Item', backref='bucketlist',
                             cascade='all, delete', lazy='dynamic')
 
-    def __repr__(self):
-        return '<BucketList %s>' % (self.name)
+    # def __repr__(self):
+    #     return '<BucketList %s>' % (self.name)
 
 
 class Item(db.Model):
@@ -77,9 +77,9 @@ class Item(db.Model):
     """
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), index=True)
+    name = db.Column(db.String(255), nullable=False)
     bucketlist_id = db.Column(db.Integer, db.ForeignKey(
-        'bucketlist.id', ondelete='CASCADE'))
+        'bucketlist.id', ondelete='CASCADE'),nullable=False)
     item_id = db.Column(db.Integer)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)

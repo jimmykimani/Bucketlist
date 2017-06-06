@@ -51,3 +51,42 @@ Install postgres and create database bucket_list
 
 > The server should be running on [http://127.0.0.1:5000] 
 
+# HOW TO USE
+
+First install postman from here
+
+Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register** 
+
+- **Register a user.**
+
+    ![register](https://i.imgur.com/QIspUlt.png)
+    ```
+        [POST] http://127.0.0.1:5000/api/v1/auth/register/
+    ```
+    ```{"username":"jimmykimani", "password":"python"}```
+
+- **Login a user.**
+
+- Change to **api/v1.0/auth/login** but the link remain the same
+
+    ![login](https://i.imgur.com/AHrWyxd.png)
+    ```
+        [POST] http://127.0.0.1:5000/api/v1/auth/register/
+    ```
+    ```{"username":"jimmykimani", "password":"python"}```
+
+- Copy only the token as shown below to the headers
+
+    ![token](https://i.imgur.com/xcc5wnn.png)
+
+- **Create a bucketlist**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+
+    ![login](https://i.imgur.com/mlsoxAq.png)
+
+    ```
+        [POST] http://127.0.0.1:5000/api/v1/bucketlists/
+    ```    
+    ```{"name":,"My new bucketlist"}```
