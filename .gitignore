@@ -89,6 +89,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
-instance
+/instance/*
 .DS_Store
 
