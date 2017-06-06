@@ -62,7 +62,7 @@ api_bucketlist = Api(bucketlist_blueprint)
 
 class BucketlistAPI(Resource):
     """
-    This class retrieves all the bucket lists 
+    This class retrieves all the bucket lists
     that a user has created
 
     The class uses reqparse to validate data
@@ -192,7 +192,7 @@ class BucketlistAPI(Resource):
 
         if not bucketlist:
             return ({'message': 'bucketlist with id {} has been updated'
-                     .format(id)}, 200)
+                        .format(id)}, 200)
         if name:
             if bucketlist.created_by == g.user.id:
 

@@ -7,7 +7,9 @@ class ValidationError(ValueError):
 
     # ======================================================
     # CUSTOM EXECPTIONS
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
+
+
 def forbidden(message):
     response = jsonify({'status': 403, 'error': 'forbidden',
                         'message': message})
@@ -35,6 +37,7 @@ def unauthorized(message):
     response.status_code = 401
     return response
 
+
 def Conflict(message):
     response = jsonify({'status': 409, 'error': 'conflict',
                         'message': message})
@@ -42,5 +45,5 @@ def Conflict(message):
     return response
 
     # ======================================================
-    # EOF 
-    # ------------------------------------------------------ 
+    # EOF
+    # ------------------------------------------------------

@@ -47,14 +47,14 @@ class BaseTestCase(unittest.TestCase):
         # If not included it will result in a 401: Unauthorized Access error.
 
         self.auth_token = data['auth_token']
-        
+
         # # Helps json to accept a JSON encoded entity from the request body.
         # # Token prefix comes before the token
 
         return{'Authorization': 'Token ' + self.auth_token,
                'Content-Type': 'application/json',
                'Accept': 'application/json',
-               }
+              }
 
     def tearDown(self):
         """teardown all initialized variables."""

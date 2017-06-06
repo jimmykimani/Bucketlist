@@ -31,7 +31,6 @@ class RegisterAPI(Resource):
             help='Please provid a password',
             location='json'
         )
-        
 
     def post(self):
         """ lets one register to the API """
@@ -50,7 +49,6 @@ class RegisterAPI(Resource):
                 db.session.add(user)
                 db.session.commit()
 
-                
                 response = {
                     'status': 'success',
                     'message': 'Successfully registered.',
@@ -73,7 +71,6 @@ class RegisterAPI(Resource):
 
 class LoginAPI(Resource):
     """Login Resource"""
-    
 
     def __init__(self):
         """
@@ -96,7 +93,6 @@ class LoginAPI(Resource):
 
     def post(self):
 
-
         args = self.reqparse.parse_args()
         user = User.query.filter_by(username=args['username']).first()
         try:
@@ -118,8 +114,8 @@ class LoginAPI(Resource):
                     }
                     return response, 404
             elif not user or not password:
-                response={
-                    'message':'Invalid user or Password mismatch'
+                response = {
+                    'message': 'Invalid user or Password mismatch'
                 }
                 return response, 404
         except:
@@ -132,7 +128,9 @@ class LoginAPI(Resource):
 # DEFINE API RESOURCE FOR BUCKETLIST AND ITEMS
 # --------------------------------------------------
 
-api_auth.add_resource(RegisterAPI, '/api/v1/auth/register', endpoint='register')
+
+api_auth.add_resource(
+    RegisterAPI, '/api/v1/auth/register', endpoint='register')
 api_auth.add_resource(LoginAPI, '/api/v1/auth/login', endpoint='login')
 
 

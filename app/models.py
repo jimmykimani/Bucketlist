@@ -36,8 +36,6 @@ class User(db.Model):
         # user id from the sub index of the payload.
         return s.dumps({'id': self.id})
 
-        
-
     @staticmethod
     def verify_auth_token(token):
         s = Serializer(os.getenv('SECRET'))
@@ -80,7 +78,8 @@ class Item(db.Model):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), index=True)
-    bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlist.id',ondelete='CASCADE' ))
+    bucketlist_id = db.Column(db.Integer, db.ForeignKey(
+        'bucketlist.id', ondelete='CASCADE'))
     item_id = db.Column(db.Integer)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     date_modified = db.Column(db.DateTime, default=datetime.utcnow)

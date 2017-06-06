@@ -13,6 +13,7 @@ item_url = '/api/v1/bucketlists/1/items/'
 # Tests Buckelist Resource functionality.
 # --------------------------------------------------------
 
+
 class BucketlistTestCase(BaseTestCase):
     """ Test api can create bucketlists. """
 
@@ -47,11 +48,10 @@ class BucketlistTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_null_bucketlists(self):
-        """ Test API can get null buecketlists """       
-        response = self.client.get(url + '1/' , headers=self.set_header())
+        """ Test API can get null buecketlists """
+        response = self.client.get(url + '1/', headers=self.set_header())
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
-
 
     def test_get_bucketlist_by_id(self):
         """ Test API can get bucketlist by id. """
@@ -108,7 +108,6 @@ class BucketlistTestCase(BaseTestCase):
                                       headers=self.set_header())
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
-        
 
     # ======================================================
     # Tests Buckelist Item Resource functionality.
@@ -142,7 +141,7 @@ class BucketlistTestCase(BaseTestCase):
                          data=json.dumps(dict(name='new bucketlist')),
                          headers=self.set_header())
         self.client.post(item_url, data=json.dumps(dict(name='new item')),
-                                    headers=self.set_header())
+                         headers=self.set_header())
         # get all items
         response = self.client.get(item_url, headers=self.set_header())
         self.assertEqual(response.status_code, 200)
@@ -154,8 +153,8 @@ class BucketlistTestCase(BaseTestCase):
                          data=json.dumps(dict(name='new bucketlist')),
                          headers=self.set_header())
         self.client.post(item_url, data=json.dumps(dict(name='new item')),
-                                    headers=self.set_header())
-        response = self.client.put(item_url+ '1',
+                         headers=self.set_header())
+        response = self.client.put(item_url + '1',
                                    data=json.dumps(
                                        dict(name='update new item')),
                                    headers=self.set_header())
@@ -168,9 +167,9 @@ class BucketlistTestCase(BaseTestCase):
                          data=json.dumps(dict(name='new bucketlist')),
                          headers=self.set_header())
         self.client.post(item_url, data=json.dumps(dict(name='new item')),
-                                    headers=self.set_header())
-        response = self.client.delete(item_url+ '1',
-                                   headers=self.set_header())
+                         headers=self.set_header())
+        response = self.client.delete(item_url + '1',
+                                      headers=self.set_header())
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
 
@@ -187,7 +186,6 @@ class BucketlistTestCase(BaseTestCase):
     #     data = json.loads(response.data.decode())
     #     self.assertEqual(response.status_code, 404)
 
-
     # ======================================================
-    # EOF 
-    # ------------------------------------------------------ 
+    # EOF
+    # ------------------------------------------------------
