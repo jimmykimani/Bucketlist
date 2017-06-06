@@ -1,8 +1,7 @@
 from flask_restful import Api, Resource, fields, marshal, reqparse
 from flask_httpauth import HTTPTokenAuth
-from flask import Flask, request, g, jsonify
+from flask import request, g, Blueprint
 from datetime import datetime
-from flask import g, Blueprint
 
 
 from app import db

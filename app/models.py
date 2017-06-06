@@ -12,7 +12,7 @@ class User(db.Model):
     APi who canbe  created and allowed to login
 
     Once a login is sucesfull the user is generatd
-    an auth token 
+    an auth token
     """
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -28,7 +28,7 @@ class User(db.Model):
 
     def generate_auth_token(self, expiration=36000):
         """
-        To verify the auth_token, we use the same 
+        To verify the auth_token, we use the same
         SECRET KEY used to encode a token
         """
         s = Serializer(os.getenv('SECRET'), expires_in=expiration)

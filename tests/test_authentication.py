@@ -37,7 +37,7 @@ class UserTestCase(BaseTestCase):
                 password='123456'
             )),
             content_type='application/json'
-        )
+        )        
         response = self.client.post(
             '/api/v1/auth/register',
             data=json.dumps(dict(
@@ -62,7 +62,7 @@ class UserTestCase(BaseTestCase):
                 password='123456'
             )),
             content_type='application/json'
-        )
+        )  
         response = self.client.post(
             '/api/v1/auth/login',
             data=json.dumps(dict(
@@ -87,7 +87,7 @@ class UserTestCase(BaseTestCase):
                 password='123456'
             )),
             content_type='application/json'
-        )
+        )  
         response = self.client.post(
             '/api/v1/auth/login',
             data=json.dumps(dict(
@@ -98,10 +98,10 @@ class UserTestCase(BaseTestCase):
         )
         data = json.loads(response.data.decode())
         self.assertTrue(data['status'] == 'fail')
-        self.assertTrue(data['message'] ==
-                        "Invalid user or Password mismatch.")
+        self.assertTrue(data['message'] == "Invalid user or Password mismatch.")
         self.assertTrue(response.content_type == 'application/json')
         self.assertEqual(response.status_code, 404)
+
 
     def test_non_registered_user_login(self):
         """ Test for login of non-registered user """
@@ -118,5 +118,5 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 404)
 
     # ======================================================
-    # EOF
-    # ------------------------------------------------------
+    # EOF 
+    # ------------------------------------------------------ 
