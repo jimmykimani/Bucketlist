@@ -135,17 +135,17 @@ class BucketlistTestCase(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
 
-    # def test_get_all_items(self):
-    #     """ Test item endpoint gets items succesfully"""
-    #     # create new item
-    #     self.client.post(url,
-    #                      data=json.dumps(dict(name='new bucketlist')),
-    #                      headers=self.set_header())
-    #     self.client.post(item_url, data=json.dumps(dict(name='new item')),
-    #                                 headers=self.set_header())
-    #     # get all items
-    #     response = self.client.get(item_url, headers=self.set_header())
-    #     self.assertEqual(response.status_code, 200)
+    def test_get_all_items(self):
+        """ Test item endpoint gets items succesfully"""
+        # create new item
+        self.client.post(url,
+                         data=json.dumps(dict(name='new bucketlist')),
+                         headers=self.set_header())
+        self.client.post(item_url, data=json.dumps(dict(name='new item')),
+                                    headers=self.set_header())
+        # get all items
+        response = self.client.get(item_url, headers=self.set_header())
+        self.assertEqual(response.status_code, 200)
 
     def test_update_items(self):
         """ Test endpoint updated items succesfully"""
@@ -163,7 +163,7 @@ class BucketlistTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_delete_item(self):
-        """ Test deletion of items """
+        """ Test delete items """
         self.client.post(url,
                          data=json.dumps(dict(name='new bucketlist')),
                          headers=self.set_header())

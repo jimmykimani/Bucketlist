@@ -44,7 +44,7 @@ class User(db.Model):
         try:
             data = s.loads(token)
         except SignatureExpired:
-            return None    # valid token, but expired
+            return None    # valid token but already expired
         except BadSignature:
             return None    # invalid token
         user = User.query.get(data['id'])
@@ -69,8 +69,8 @@ class Bucketlist(db.Model):
     items = db.relationship('Item', backref='bucketlist',
                             cascade='all, delete', lazy='dynamic')
 
-    # def __repr__(self):
-    #     return '<BucketList %s>' % (self.name)
+    def __repr__(self):
+        return '<BucketList %s>' % (self.name)
 
 
 class Item(db.Model):

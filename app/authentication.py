@@ -17,7 +17,7 @@ class RegisterAPI(Resource):
     """
 
     def __init__(self):
-
+        # Use reqparse for request data validation
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
             'username', type=str,
@@ -45,17 +45,15 @@ class RegisterAPI(Resource):
                     password_hash=args['password']
                 )
 
-                # insert the user
+                # insert the user and hash password
                 user.hash_password(args['password'])
                 db.session.add(user)
                 db.session.commit()
 
-                # generate the auth token
-                # auth_token = user.generate_auth_token()
+                
                 response = {
                     'status': 'success',
                     'message': 'Successfully registered.',
-                    # 'auth_token': auth_token.decode()
                 }
 
                 return (response, 201)
@@ -75,6 +73,7 @@ class RegisterAPI(Resource):
 
 class LoginAPI(Resource):
     """Login Resource"""
+    
 
     def __init__(self):
         """
@@ -104,6 +103,7 @@ class LoginAPI(Resource):
             if user:
                 # verifies user and password
                 if user.verify_password(args['password']):
+                    # generate the auth token
                     auth_token = user.generate_auth_token()
                     response = {
                         'status': 'success',
@@ -128,8 +128,14 @@ class LoginAPI(Resource):
                 'message': 'Try again'
             }
             return response, 500
+# =================================================
+# DEFINE API RESOURCE FOR BUCKETLIST AND ITEMS
+# --------------------------------------------------
 
 api_auth.add_resource(RegisterAPI, '/api/v1/auth/register', endpoint='register')
 api_auth.add_resource(LoginAPI, '/api/v1/auth/login', endpoint='login')
 
 
+# =================================================
+# EOF
+# --------------------------------------------------

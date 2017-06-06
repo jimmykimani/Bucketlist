@@ -89,7 +89,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
-u.py
-base.py
-auth.py
+instance
 .DS_Store
+

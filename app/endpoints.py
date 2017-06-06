@@ -31,6 +31,7 @@ def verify_token(token):
 # Flask-RESTful provides the fields module and the marshal to help us solve this
 # while working with objects
 
+
 # Field Marshal for Bucketlist item
 bucketlist_item_field = {'item_id': fields.Integer,
                          'name': fields.String,
@@ -97,7 +98,7 @@ class BucketlistAPI(Resource):
             limit:specify the number of results
         Returns:
             BucketList query
-        """   
+        """
         if id:
             bucket = Bucketlist.query.filter_by(
                 id=id, created_by=g.user.id).first()
@@ -183,7 +184,7 @@ class BucketlistAPI(Resource):
             id :the bucketlist identiier
         Returns:
             a dictionary of the bucketlist updated
-        """      
+        """
         args = self.reqparse.parse_args()
         bucketlist = Bucketlist.query.filter_by(
             id=id, created_by=g.user.id).first()
@@ -258,7 +259,7 @@ class BucketlistItemAPI(Resource):
             location='json'
         )
 
-    def get(self, bucketlist_id=None, item_id=None):
+    def get(self, bucketlist_id, item_id=None):
         """
         Returns a bucketlist item
 
@@ -267,19 +268,25 @@ class BucketlistItemAPI(Resource):
             item_id :the bucketlist item identifier
         Returns:
             BucketList item query
-        """     
+        """
         if item_id:
             user_id = g.user.id
-            get_item = Item.query.filter_by(
-                id=bucketlist_id, item_id=item_id).first()
-            return marshal(get_item, bucketlist_item_field), 200
-        if bucketlist_id:
-            return marshal(get_item, bucketlist_item_field), 200
+            bucket_item = Item.query.filter_by(
+                bucketlist_id=bucketlist_id, item_id=item_id).first()
+            if not bucket_item:
+                return errors.not_found("No items found")
+            return marshal(bucket_item, bucketlist_item_field), 200
+        elif bucketlist_id:
+            bucket_item = Item.query.filter_by(
+                bucketlist_id=bucketlist_id).all()
+            if not bucket_item:
+                return errors.not_found("No items found for this bucketlist")
+            return marshal(bucket_item, bucketlist_item_field), 200
         else:
             item = Item.query.filter().all()
-            if not items:
-                return errors.not_found('No items created')
-            return marshal(item, bucketlist_item_field), 200
+            if item:
+                return marshal(item, bucketlist_item_field), 200
+            return errors.not_found('No items created')
 
     def post(self, bucketlist_id):
         """
@@ -292,7 +299,7 @@ class BucketlistItemAPI(Resource):
             id=bucketlist_id, created_by=g.user.id).first()
 
         if not bucketlist:
-            return errors.not_found('Sorry couldnt find bucketlist that matches id {}'\
+            return errors.not_found('Sorry couldnt find bucketlist that matches id {}'
                                     .format(bucketlist_id))
 
         existent_item = (Item.query.filter_by(
@@ -349,7 +356,7 @@ class BucketlistItemAPI(Resource):
             return errors.not_found('Invalid item id')
 
         elif bucketlist_item:
-            if done in ['True', 'False']:
+            if done in [True, False]:
                 bucketlist_item.done = done
             if name:
                 bucketlist_item.name = name
@@ -363,8 +370,7 @@ class BucketlistItemAPI(Resource):
         """
         bucketlist = Bucketlist.query.filter_by(
             id=bucketlist_id, created_by=g.user.id).first()
-        bucketlist_item = Item.query.filter_by(bucketlist_id=bucketlist_id,
-                                               item_id=item_id).first()
+        bucketlist_item = Item.query.filter_by(item_id=item_id).first()
 
         if not bucketlist or bucketlist_item:
             return errors.not_found('Invalid bucketlist id')
@@ -377,6 +383,7 @@ class BucketlistItemAPI(Resource):
 
 # =================================================
 # DEFINE API RESOURCE FOR BUCKETLIST AND ITEMS
+
 
 api_bucketlist.add_resource(
     BucketlistAPI, '/api/v1/bucketlists/<int:id>/', '/api/v1/bucketlists/', endpoint='bucketlists')

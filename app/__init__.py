@@ -17,7 +17,7 @@ def create_app(config_name):
     from app.authentication import auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    from app.bucketlist_api import bucketlist_blueprint
+    from app.endpoints import bucketlist_blueprint
     app.register_blueprint(bucketlist_blueprint)
     
     # pass flask object to db object

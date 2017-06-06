@@ -48,3 +48,4 @@ Install postgres and create database bucket_list
 3. ```python manage.py db upgrade```
 
 > The server should be running on [http://127.0.0.1:5000] 
+
