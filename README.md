@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/jimmykimani/Bucketlist.svg?branch=master)](https://travis-ci.org/jimmykimani/Bucketlist) [![Jimmy Kimani](https://img.shields.io/badge/Jmmy%20Kimani-Checkpoint2-green.svg)]()
+[![Build Status](https://travis-ci.org/jimmykimani/Bucketlist.svg?branch=master)](https://travis-ci.org/jimmykimani/Bucketlist)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ac0ea7159b464c4e97f06eab027ea69b)](https://www.codacy.com/app/jimmykimani/Bucketlist?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jimmykimani/Bucketlist&amp;utm_campaign=Badge_Grade)
+[![Jimmy Kimani](https://img.shields.io/badge/Jmmy%20Kimani-Checkpoint2-green.svg)]()
 
 # What is a Bucketlist?
 
