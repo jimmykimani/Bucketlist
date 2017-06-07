@@ -6,9 +6,12 @@ COV = coverage.coverage(
     branch=True,
     omit=[
         '*/*bc/*',
-        'bucketlist/*',
-        'tests/*',
-        'config.py',
+        'manage.py/*',
+        'app/errors.py'
+        'tests/base.py',
+        'tests/test_authentication.py',
+        'tests/test_endpoints.py'
+        'instance/config.py',
         '/*/__init__.py'
     ]
 )

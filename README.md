@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jimmykimani/Bucketlist.svg?branch=master)](https://travis-ci.org/jimmykimani/Bucketlist)
+[![Build Status](https://img.shields.io/travis/rust-lang/rust/master.svg)]()
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ac0ea7159b464c4e97f06eab027ea69b)](https://www.codacy.com/app/jimmykimani/Bucketlist?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jimmykimani/Bucketlist&amp;utm_campaign=Badge_Grade)
 [![Jimmy Kimani](https://img.shields.io/badge/Jmmy%20Kimani-Checkpoint2-green.svg)]()
 
@@ -105,7 +105,7 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
     To list all bucketlists, make a **GET** request to the following URI:
     **http://127.0.0.1:5000/api/v1/bucketlists/**.
 
-    ![login](https://i.imgur.com/mlsoxAq.png)
+    ![login](https://i.imgur.com/R8PSW4Q.png)
 
     ```
         [GET] http://127.0.0.1:5000/api/v1/bucketlists/
