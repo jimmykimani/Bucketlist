@@ -44,12 +44,12 @@ class BaseTestCase(unittest.TestCase):
         # A Token is needed to restrict access to certain resources
         # If not included it will result in a 401: Unauthorized Access error.
 
-        auth_token = data['auth_token']
+        self.token = data['auth_token']
 
         # # Helps json to accept a JSON encoded entity from the request body.
         # # Token prefix comes before the token
 
-        return{'Authorization': 'Token ' + auth_token,
+        return{'Authorization': 'Token ' + self.token,
                'Content-Type': 'application/json',
                'Accept': 'application/json',
               }
