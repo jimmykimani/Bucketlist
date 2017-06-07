@@ -61,6 +61,7 @@ Install postgres ```brew install postgresql```
 ## HOW TO USE
 
 First install postman from here
+>The following screenshots shows some exmples on how to consume the bucketlist API
 
 Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register** 
 
@@ -101,7 +102,7 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
 
 - **Get all bucketlist**
 
-    To create a bucketlist, make a **POST** request to the following URI:
+    To list all bucketlists, make a **GET** request to the following URI:
     **http://127.0.0.1:5000/api/v1/bucketlists/**.
 
     ![login](https://i.imgur.com/mlsoxAq.png)
@@ -112,8 +113,8 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
     ```
 - **Get a bucketlist by id**
 
-    To create a bucketlist, make a **POST** request to the following URI:
-    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+    To get a bucketlist by id , make a **GET** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/1**.
 
     ![login](https://i.imgur.com/mlsoxAq.png)
 
@@ -123,7 +124,7 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
     ```    
 - **Update a bucketlist**
 
-    To create a bucketlist, make a **POST** request to the following URI:
+    To update a bucketlist, make a **PUT** request to the following URI:
     **http://127.0.0.1:5000/api/v1/bucketlists/**.
 
     ![login](https://i.imgur.com/Lxj2hxy.png)
@@ -133,7 +134,7 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
     ```
 - **Delete a bucketlist**
 
-    To create a bucketlist, make a **POST** request to the following URI:
+    To delete a bucketlist, make a **DELETE** request to the following URI:
     **http://127.0.0.1:5000/api/v1/bucketlists/**.
 
     ![login](https://i.imgur.com/ucsGJ38.png)
@@ -155,8 +156,8 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
 
 - **Get all bucketlist items**
 
-    To create a bucketlist, make a **POST** request to the following URI:
-    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+    To list all bucketlist items , make a **GET** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/items/**.
 
     ![login](https://i.imgur.com/DlGju1Y.png)
 
@@ -167,7 +168,7 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
 
 - **Get a bucketlist item by id**
 
-    To create a bucketlist, make a **POST** request to the following URI:
+    To get a bucketlist, make a **GET** request to the following URI:
     **http://127.0.0.1:5000/api/v1/bucketlists/items/1**.
 
     ![login](https://i.imgur.com/nSwyMIZ.png)
@@ -193,14 +194,14 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
 
     ### Testing
 
-Without coverage:
+    Without coverage:
 
-```sh
-$ python manage.py test
-```
+    ```sh
+    $ python manage.py test
+    ```
 
-With coverage:
+    With coverage:
 
-```sh
-$ python manage.py cov
-```
+    ```sh
+    $ python manage.py cov
+    ```
