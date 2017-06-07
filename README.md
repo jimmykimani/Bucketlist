@@ -1,6 +1,7 @@
 [![Build Status](https://img.shields.io/travis/rust-lang/rust/master.svg)]()
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ac0ea7159b464c4e97f06eab027ea69b)](https://www.codacy.com/app/jimmykimani/Bucketlist?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jimmykimani/Bucketlist&amp;utm_campaign=Badge_Grade)
 [![Jimmy Kimani](https://img.shields.io/badge/Jmmy%20Kimani-Checkpoint2-green.svg)]()
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 
 ## What is a Bucketlist?
 
