@@ -19,7 +19,7 @@ class RegisterAPI(Resource):
         # Use reqparse for request data validation
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument(
-            'username', type=str,
+            'username', type=inputs.regex('^[a-z]+$'),
             required=True,
             help='Invalid Username!',
             location='json'

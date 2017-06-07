@@ -46,7 +46,7 @@ bucketlist_field = {'id': fields.Integer,
                     'name': fields.String,
                     'date_created': fields.DateTime,
                     'date_modified': fields.DateTime,
-                    'created_by': fields.String,
+                    'created_by': fields.Integer,
                     'items': fields.Nested(bucketlist_item_field),
                     'uri': fields.Url('bucket_list.bucketlists'),
                     }

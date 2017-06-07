@@ -11,7 +11,7 @@ Simply it is a list of all the goals you want to achieve, dreams you want to ful
 A flask based API to avail resources for creation of bucketlists
 >[Flask](http://flask.pocoo.org/) is a common microframework for the Python programming language.
 
-# SCOPE
+## SCOPE
 
 |Method | Endpoint | Usage |
 | ---- | ---- | --------------- |
@@ -40,7 +40,13 @@ A flask based API to avail resources for creation of bucketlists
 
 **Setup Database:**
 
-Install postgres and create database bucket_list
+Install postgres ```brew install postgresql```
+
+1. ```type psql in terminal.```
+
+2. ```On postgres interactive interface, type CREATE DATABASE bucketlist;```
+
+3. ```source .env```
 
 **Run the Migrations**:
 1. ```python manage.py db init```
@@ -49,6 +55,7 @@ Install postgres and create database bucket_list
 
 3. ```python manage.py db upgrade```
 
+4. ```Flask Run```
 > The server should be running on [http://127.0.0.1:5000] 
 
 ## HOW TO USE
@@ -67,7 +74,7 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
 
 - **Login a user.**
 
-- Change to **api/v1.0/auth/login** but the link remain the same
+- Change to **api/v1.0/auth/login** but the link remains the same
 
     ![login](https://i.imgur.com/AHrWyxd.png)
     ```
@@ -79,6 +86,7 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
 
     ![token](https://i.imgur.com/xcc5wnn.png)
 
+    ``` Token  eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ5Njc3ODQyMiwiaWF0IjoxNDk2NzQyNDIyfQ.eyJpZCI6Mn0.GrI6kkcKEKu97wNnsMVLTRuUc2rAwCep8sCJIS410ho```
 - **Create a bucketlist**
 
     To create a bucketlist, make a **POST** request to the following URI:
@@ -89,4 +97,110 @@ Copy the link `http://127.0.0.1:5000/` and append **api/v1.0/auth/register**
     ```
         [POST] http://127.0.0.1:5000/api/v1/bucketlists/
     ```    
-    ```{"name":,"My new bucketlist"}```
+    ```{"name":"My bucketlist"}```
+
+- **Get all bucketlist**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+
+    ![login](https://i.imgur.com/mlsoxAq.png)
+
+    ```
+        [GET] http://127.0.0.1:5000/api/v1/bucketlists/
+
+    ```
+- **Get a bucketlist by id**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+
+    ![login](https://i.imgur.com/mlsoxAq.png)
+
+    ```
+        [GET] http://127.0.0.1:5000/api/v1/bucketlists/1/
+
+    ```    
+- **Update a bucketlist**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+
+    ![login](https://i.imgur.com/Lxj2hxy.png)
+
+    ```
+        [PUT] http://127.0.0.1:5000/api/v1/bucketlists/1/
+    ```
+- **Delete a bucketlist**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+
+    ![login](https://i.imgur.com/ucsGJ38.png)
+
+    ```
+        [DELETE] http://127.0.0.1:5000/api/v1/bucketlists/1/
+    ```
+- **Create a bucketlist Item**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/items/**.
+
+    ![login](https://i.imgur.com/s7KwXXE.png)
+
+    ```
+        [POST] http://127.0.0.1:5000/api/v1/bucketlists/items/
+    ```    
+    ```{"name":"watch silicon valley"}```
+
+- **Get all bucketlist items**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/**.
+
+    ![login](https://i.imgur.com/DlGju1Y.png)
+
+    ```
+        [POST] http://127.0.0.1:5000/api/v1/bucketlists/items/
+
+    ```
+
+- **Get a bucketlist item by id**
+
+    To create a bucketlist, make a **POST** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/items/1**.
+
+    ![login](https://i.imgur.com/nSwyMIZ.png)
+
+    ```
+        [POST] http://127.0.0.1:5000/api/v1/bucketlists/items/1
+
+    ```
+
+- **Update a bucketlist item by id**
+
+    To update a bucketlist item , make a **PUT** request to the following URI:
+    **http://127.0.0.1:5000/api/v1/bucketlists/items/1**.
+
+    ![login](https://i.imgur.com/8AzXvzK.png)
+
+    ```
+        {"name":"watch silicon valley", done:"True"}
+
+    ```
+
+
+
+    ### Testing
+
+Without coverage:
+
+```sh
+$ python manage.py test
+```
+
+With coverage:
+
+```sh
+$ python manage.py cov
+```
