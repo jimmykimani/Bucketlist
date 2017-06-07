@@ -1,6 +1,7 @@
 import os
+import datetime
 from app import db
-from datetime import datetime
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 from passlib.apps import custom_app_context as pwd_context
@@ -60,8 +61,10 @@ class Bucketlist(db.Model):
     __tablename__ = 'bucketlist'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+    date_created = db.Column(db.DateTime, default=datetime.datetime.now)
+    date_modified = db.Column(db.DateTime,
+                              default=datetime.datetime.now,
+                              onupdate=datetime.datetime.now)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'),
                            nullable=False)
     items = db.relationship('Item', backref='bucketlist',
@@ -81,8 +84,10 @@ class Item(db.Model):
     bucketlist_id = db.Column(db.Integer, db.ForeignKey(
         'bucketlist.id', ondelete='CASCADE'),nullable=False)
     item_id = db.Column(db.Integer)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    date_modified = db.Column(db.DateTime, default=datetime.utcnow)
+    date_created = db.Column(db.DateTime, default=datetime.datetime.now)
+    date_modified = db.Column(db.DateTime,
+                              default=datetime.datetime.now,
+                              onupdate=datetime.datetime.now)
     done = db.Column(db.Boolean, default=False)
 
     def __repr__(self):

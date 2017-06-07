@@ -131,7 +131,7 @@ class BucketlistAPI(Resource):
 
         if q:
             bucketlist = Bucketlist.query.filter(Bucketlist.created_by == g.user.id,
-                                                 Bucketlist.name.like('%' + q + '%'))\
+                                                 Bucketlist.name.ilike('%' + q + '%'))\
                 .paginate(page, limit, False)
         else:
             bucketlist = Bucketlist.query.filter_by(created_by=g.user.id).\
