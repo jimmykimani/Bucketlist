@@ -14,3 +14,10 @@ script:
 
 after_success:
   coveralls
+
+env:
+  - FLASK_APP="run.py"
+  - DATABASE_URL="postgresql://localhost/flask_api"
+  - APP_SETTINGS="development"
+global:
+  - SECRET="\xd5\xa9\x16\x8b\xf3\x86\x07;\xc1\xdbQ\x9b.\x0eA\xeb\x053\x1c\x00\xf0\x16\xbd'"

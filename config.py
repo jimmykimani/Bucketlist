@@ -32,8 +32,8 @@ class TestingConfig(Config):
     """
     TESTING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/test_db' or \
-        'sqlite:///' + os.path.join(basedir, 'test_db.sqlite')
+    SQLALCHEMY_DATABASE_URI = ('sqlite:///' + os.path.join(basedir,
+                                                           'bucketlist.db'))
     DEBUG = True
 
 
