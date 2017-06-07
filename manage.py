@@ -23,7 +23,7 @@ from app import db, create_app
 from app.models import User, Bucketlist, Item
 
 # create the app
-app = create_app(config_name=os.getenv('APP_SETTINGS'))
+app = create_app(config_name=os.getenv('APP_SETTINGS')or 'default')
 migrate = Migrate(app, db)
 manager = Manager(app)
 
