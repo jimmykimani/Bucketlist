@@ -32,7 +32,7 @@ class User(db.Model):
         To verify the auth_token, we use the same
         SECRET KEY used to encode a token
         """
-        s = Serializer(os.getenv('SECRET'), expires_in=expiration)
+        s = Serializer(os.getenv('SECRET') or "\xd5\xa9\x16\x8b\xf3\x86\x07;\xc1\xdbQ\x9b.\x0eA\xeb\x053\x1c\x00\xf0\x16\xbd'", expires_in=expiration)
         # If the auth_token is valid, we get the
         # user id from the sub index of the payload.
         return s.dumps({'id': self.id})
