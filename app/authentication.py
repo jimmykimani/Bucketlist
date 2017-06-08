@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, make_response, jsonify
-from flask_restful import reqparse, Resource, Api, inputs		 
+from flask_restful import reqparse, Resource, Api, inputs
 from app import db
 from app.models import User
 
