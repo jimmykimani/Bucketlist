@@ -8,7 +8,7 @@ class Config(object):
     """
     DEBUG = False
     CSRF_ENABLED = True
-    SECRET = os.getenv('SECRET')
+    SECRET = os.getenv('SECRET') or "\xd5\xa9\x16\x8b\xf3\x86\x07;\xc1\xdbQ\x9b.\x0eA\xeb\x053\x1c\x00\xf0\x16\xbd'"
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'bucketlist.sqlite')
 
