@@ -112,10 +112,6 @@ class LoginAPI(Resource):
                         'message': 'Invalid user or Password mismatch.'
                     }
                     return response, 404
-            elif not user or not password:
-                response={
-                    'message': 'Invalid user or Password mismatch'
-                }
                 return response, 404
         except:
             response = {
