@@ -37,7 +37,7 @@ class UserTestCase(BaseTestCase):
                 password='123456'
             )),
             content_type='application/json'
-        )        
+        )
         response = self.client.post(
             '/api/v1/auth/register',
             data=json.dumps(dict(
@@ -118,5 +118,5 @@ class UserTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 404)
 
     # ======================================================
-    # EOF 
-    # ------------------------------------------------------ 
+    # EOF
+    # ------------------------------------------------------

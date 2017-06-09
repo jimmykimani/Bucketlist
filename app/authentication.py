@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, make_response, jsonify
-from flask_restful import reqparse, Resource, Api, inputs		 
+from flask_restful import reqparse, Resource, Api, inputs
 from app import db
 from app.models import User
 
@@ -112,10 +112,6 @@ class LoginAPI(Resource):
                         'message': 'Invalid user or Password mismatch.'
                     }
                     return response, 404
-            elif not user or not password:
-                response={
-                    'message': 'Invalid user or Password mismatch'
-                }
                 return response, 404
         except:
             response = {
