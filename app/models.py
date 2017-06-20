@@ -9,10 +9,10 @@ from passlib.apps import custom_app_context as pwd_context
 
 class User(db.Model):
     """
-    This class represents thr user model of the
-    APi who canbe  created and allowed to login
+    This class represents the user model of the
+    API who can be  created and allowed to login
 
-    Once a login is sucesfull the user is generatd
+    Once a login is sucessful the user is generated with 
     an auth token
     """
     __tablename__ = 'user'
@@ -55,7 +55,7 @@ class User(db.Model):
 
 class Bucketlist(db.Model):
     """
-    This class reprewsents Bucketlist tables
+    This class represents Bucketlist tables
     """
 
     __tablename__ = 'bucketlist'
