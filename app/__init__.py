@@ -22,4 +22,8 @@ def create_app(config_name):
     # pass flask object to db object
     db.init_app(app)
 
+    @app.route('/')
+    def index():
+        return "hello world"
+
     return app
