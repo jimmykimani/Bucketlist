@@ -52,7 +52,7 @@ class BaseTestCase(unittest.TestCase):
         return{'Authorization': 'Token ' + self.token,
                'Content-Type': 'application/json',
                'Accept': 'application/json',
-              }
+               }
 
     def tearDown(self):
         """teardown all initialized variables."""
