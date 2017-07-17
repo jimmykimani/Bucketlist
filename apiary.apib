@@ -1,31 +1,53 @@
 FORMAT: 1A
 HOST: https://primer-bucketlist.herokuapp.com/
 
-# BucketList-API
-This is a Flask API for an online BucketList service.
+# Primer-BucketList-API
+Primer is a API Resource for an online BucketList service.
+> Built using Flask-Restful
 
-This API requires token-based authentication to access resources.
-It also has pagination and search capabilities on the resources requested.
+# Allowed HTTPs requests:
+<pre>
+POST     : To create resource 
+PUT    : Update resource
+GET     : Get a resource or list of resources
+DELETE  : To delete resource
+</pre>
 
-The features attached to the service include:
-* user registration
-* authenticating a user
-* creating a new bucket list
-* updating and deleting bucket lists
-* retrieving a list of all created bucket lists by a registered user.
-* creating a new bucket list item
-* updating and deleting bucket list items
-* retrieving a list of all created bucket list items by a registered user.
+# Description Of Usual Server Responses:
+- 200 `OK` - the request was successful (some API calls may return 201 instead).
+- 201 `Created` - the request was successful and a resource was created.
+- 204 `No Content` - the request was successful but there is no representation to return (i.e. the response is empty).
+- 400 `Bad Request` - the request could not be understood or was missing required parameters.
+- 401 `Unauthorized` - authentication failed or user doesn't have permissions for requested operation.
+- 403 `Forbidden` - access denied.
+- 404 `Not Found` - resource was not found.
+- 405 `Method Not Allowed` - requested method is not supported for resource.
+
+> ##The features attached to the service include:
+* User Login and Sign up
+* Token Bases Authentication 
+* Creating Bucketlists
+* View Bucketlists
+* Update bucketlists.
+* Delete a single Bucketlist
+* Create and view all Bucketlist Items
+* Update and Delete Bucketlist Items.
 
 ## Group User Authentication
 
 ## Login [/api/v1/auth/login]
+---
+**User attributes:**
+
+- id `(Number)` : unique identifier. 
+- username `(String)`
+- password `(Number)`
+
+---
 
 ### Authenticate a user and generate a token [POST]
 
-Use your correct email and password.
-Note the token returned on successful login. It is required to access other
-resources.
+To login use your registered credentials .
 
 + Request (application/json)
 
@@ -37,6 +59,7 @@ resources.
 + Response 200 (application/json)
 
         {
+            "message": "Woot! Woot! You're in."
             "token": "ARandomtok3n"
         }
 
@@ -46,7 +69,7 @@ resources.
 
 ### Register a new user [POST]
 
-You may use any name or password combination for the registration.
+Use any username or password combination for the registration.
 
 + Request (application/json)
 
@@ -83,13 +106,13 @@ Create a new bucketlist by making a `POST` request to the `/api/v1/bucketlists/`
 + Response 201 (application/json)
 
         {
-            "message": "Bucketlist Learn how to swim has been added"
+            "message": "Bucketlist succesfully created"
         }
 
 + Response 400 (application/json)
 
         {
-            "message": "Invalid bucketlist title!"
+            "message": "Invalid!"
         }
 
 + Response 409 (application/json)
@@ -109,8 +132,8 @@ Optional request parameters:
 
 + Parameters
 
-    + page (optional, int) - the page to receive
-    + limit (optional, int) - the number of bucketlist results per page
+    + page (optional, int) ... the page to receive
+    + limit (optional, int) ... the number of bucketlist results per page
 
 + Request (application/json)
 
@@ -122,7 +145,7 @@ Optional request parameters:
 
         {
            "id": <id>,
-           "title": "Learn how to swim",
+           "title": "Go on a cruise",
            "date_created": "Wed, 05 Jul 2017 10:02:03 GMT"
         }
 
@@ -135,7 +158,7 @@ Optional request parameters:
 + Response 404 (application/json)
 
         {
-            "message": "Bucketlist cannot be found"
+            "message": "Bucketlist not found"
         }
 
 ## Single BucketList Resource [/api/v1/bucketlists/<int:id>/]
@@ -143,7 +166,9 @@ Optional request parameters:
 ### Get a single bucketlist [GET]
 
 Retrieve a single bucketlist
-
++ Parameters
+    + id (required, Number, `1`) ... Numeric `id` of the Bucketlistr to perform action with.
+    
 + Request (application/json)
 
     + Headers
@@ -183,27 +208,27 @@ Update a single bucketlist
     + Body
 
             {
-                "title": "Learn how to play golf"
+                "title": "Watch Wonder woman"
             }
 
 + Response 200 (application/json)
 
       {
           "id": <id>,
-          "title": "Learn how to play golf",
+          "title": "Watch Wonder woman",
           "date_created": "Wed, 05 Jul 2017 10:02:03 GMT"
       }
 
 + Response 404 (application/json)
 
         {
-            "message": "Bucketlist cannot be found"
+            "message": "Bucketlist not found"
         }
 
 + Response 409 (application/json)
 
         {
-            "message": "No updates detected"
+            "message": "Invalid"
         }
 
 + Response 401 (application/json)
@@ -255,20 +280,19 @@ Create a new item in a bucketlist
     + Body
 
             {
-                "name": "Item on golf"
-                "description": "Golf - Great sport"
+                "name": "Read a Classic Novel"
             }
 
 + Response 201 (application/json)
 
         {
-            "message": "Item Item on golf has been added"
+            "message": "Item succesfully created"
         }
 
 + Response 400 (application/json)
 
         {
-            "message": "Invalid name format"
+            "message": "Invalid"
         }
 
 + Response 409 (application/json)
@@ -293,16 +317,6 @@ Create a new item in a bucketlist
 
 Retrieve all items in a bucketlist
 
-Optional request parameters:
-
-- `page` default is 1
-- `limit` default is 20
-
-+ Parameters
-
-    + page (optional, int) - the page to receive
-    + limit (optional, int) - the number of bucketlist item results per page
-
 + Request (application/json)
 
     + Headers
@@ -313,11 +327,10 @@ Optional request parameters:
 
         {
             "id": <id>,
-            "name": "Item on golf",
-            'description': "Golf - Great sport",
-            'status': "Not done",
-            'date_created': "Wed, 05 Jul 2017 10:02:03 GMT",
-            'bucketlist': "Learn how to play golf"
+            "name": "Read a Classic Novel",
+            'status': "False",
+            'date_created': "Wed,Jul 2017 10:02:03 GMT",
+            'bucketlist_id': 1
         }
 
 + Response 404 (application/json)
@@ -348,17 +361,17 @@ Retrieve a single item in a bucketlist
 
         {
             "id": <id>,
-            "name": "Item on golf",
-            'description': "Golf - Great sport",
-            'status': "Not done",
-            'date_created': "Wed, 05 Jul 2017 10:02:03 GMT",
-            'bucketlist': "Learn how to play golf"
+            "name": "Read a Classic Novel",
+            'status': "False",
+            'date_created': "Wed,Jul 2017 10:02:03 GMT",
+            'bucketlist_id': 1
         }
+
 
 + Response 404 (application/json)
 
         {
-            "message": "Bucketlist cannot be found"
+            "message": "Bucketlist not found"
         }
 
 + Response 401 (application/json)
@@ -380,31 +393,24 @@ Update a single bucketlist item
     + Body
 
             {
-                "name": "Item1",
-                'description': "Golf - Great sport"
+                "name": "Read a Classic Novel",
+                'Status': "True"
             }
 
 + Response 201 (application/json)
 
         {
             "id": <id>,
-            "name": "Item1",
-            'description': "Golf - Great sport",
-            'is_completed': "False",
+            "name": "go the mall",
             'date_created': "Wed, 05 Jul 2017 10:02:03 GMT",
             'date_modified': "Wed, 05 Jul 2017 10:02:03 GMT"
         }
 
-+ Response 409 (application/json)
-
-        {
-            "message": "No updates detected"
-        }
 
 + Response 404 (application/json)
 
         {
-            "message": "Item be found"
+            "message": "Item not found"
         }
 
 + Response 401 (application/json)
@@ -413,50 +419,6 @@ Update a single bucketlist item
             "message": "Please provide a valid auth token!"
         }
 
-### Update a bucketlist item completion status [PATCH]
-
-Update bucketlist item is_completed attribute
-
-+ Request (application/json)
-
-    + Headers
-
-            Authorization: "Token <auth_token>"
-
-    + Body
-
-            {
-                "is_completed": "true"
-            }
-
-+ Response 200 (application/json)
-
-        {
-            "id": <id>,
-            "name": "Item1",
-            'description': "Golf - Great sport",
-            'is_completed': "True",
-            'date_created': "Wed, 05 Jul 2017 10:02:03 GMT",
-            'date_modified': "Wed, 05 Jul 2017 10:02:03 GMT"
-        }
-
-+ Response 409 (application/json)
-
-        {
-            "message": "No updates detected"
-        }
-
-+ Response 404 (application/json)
-
-        {
-            "message": "Item be found"
-        }
-
-+ Response 401 (application/json)
-
-        {
-            "message": "Please provide a valid auth token!"
-        }
 
 ### Delete a single bucketlist item [DELETE]
 
