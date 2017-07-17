@@ -3,6 +3,8 @@
 [![Jimmy Kimani](https://img.shields.io/badge/Jmmy%20Kimani-Checkpoint2-green.svg)]()
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 
+## See Full Documention here:
+> https://primer-bucketlist.herokuapp.com/
 ## What is a Bucketlist?
 
 Simply it is a list of all the goals you want to achieve, dreams you want to fulfill and life experiences you desire to experience before you die.
