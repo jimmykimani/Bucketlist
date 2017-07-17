@@ -1,5 +1,6 @@
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 
 # local import
 from config import config
@@ -24,6 +25,6 @@ def create_app(config_name):
 
     @app.route('/')
     def index():
-        return "hello world"
+        return render_template("docs.html")
 
     return app
